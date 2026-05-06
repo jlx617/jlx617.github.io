@@ -144,11 +144,16 @@ function WorkstationInner({ templateName }) {
   const [voiceSupported, setVoiceSupported] = useState(true); // 语音识别是否支持
   const [voiceToast, setVoiceToast] = useState(''); // 语音提示消息
 
+  // ---------- 图片轮播状态 ----------
+  const [currentImageIndex, setCurrentImageIndex] = useState(0); // 当前显示的图片索引
+  const [loadedImages, setLoadedImages] = useState({}); // 记录已加载的图片
+
   // ---------- 引用 ----------
   const waitTimerRef = useRef(null);
   const prevStepIndexRef = useRef(-1);
   const voiceTimerRef = useRef(null);
   const moreMenuRef = useRef(null);
+  const imageTimerRef = useRef(null);
 
   // ---------- 从引擎状态获取数据 ----------
   const currentStep = engineState?.currentStep || null;
@@ -168,6 +173,38 @@ function WorkstationInner({ templateName }) {
       setAllSteps((matched || templates[0]).steps || []);
     }
   }, [taskName]);
+
+  // ---------- 图片轮播自动切换 ----------
+  useEffect(() => {
+    const step = engineState?.currentStep || null;
+    if (!step || !step.images || step.images.length === 0) return;
+
+    const imageCount = step.images.length;
+
+    // 步骤变化时重置到第一张图
+    if (prevStepIndexRef.current !== currentStepIndex) {
+      setCurrentImageIndex(0);
+      prevStepIndexRef.current = currentStepIndex;
+    }
+
+    // 清除之前的定时器
+    if (imageTimerRef.current) {
+      clearInterval(imageTimerRef.current);
+    }
+
+    // 如果有多张图片，自动轮播（每5秒切换）
+    if (imageCount > 1) {
+      imageTimerRef.current = setInterval(() => {
+        setCurrentImageIndex(prev => (prev + 1) % imageCount);
+      }, 5000);
+    }
+
+    return () => {
+      if (imageTimerRef.current) {
+        clearInterval(imageTimerRef.current);
+      }
+    };
+  }, [currentStepIndex, engineState?.currentStep]);
 
   // ---------- 打字机效果 ----------
   const { displayText, isTyping } = useTypewriter(
@@ -540,18 +577,39 @@ function WorkstationInner({ templateName }) {
             }`}
             key={currentStepIndex}
           >
-            {/* 步骤指导图片 */}
+            {/* 步骤指导图片轮播 */}
             <div className="workstation__step-image">
-              {currentStep.imageUrl && currentStep.imageUrl.startsWith('/') ? (
-                <img
-                  src={currentStep.imageUrl}
-                  alt={currentStep.title || '步骤指导'}
-                  className="workstation__step-img"
-                  onError={(e) => {
-                    // 图片加载失败时隐藏
-                    e.target.style.display = 'none';
-                  }}
-                />
+              {currentStep.images && currentStep.images.length > 0 ? (
+                <>
+                  <img
+                    src={currentStep.images[currentImageIndex]}
+                    alt={`步骤${currentImageIndex + 1}/${currentStep.images.length}`}
+                    className="workstation__step-img"
+                    key={currentImageIndex}
+                    onError={(e) => {
+                      // 图片加载失败时隐藏
+                      e.target.style.display = 'none';
+                    }}
+                  />
+                  {/* 图片指示器 */}
+                  {currentStep.images.length > 1 && (
+                    <div className="workstation__image-dots">
+                      {currentStep.images.map((_, idx) => (
+                        <span
+                          key={idx}
+                          className={`workstation__image-dot ${idx === currentImageIndex ? 'workstation__image-dot--active' : ''}`}
+                          onClick={() => setCurrentImageIndex(idx)}
+                        />
+                      ))}
+                    </div>
+                  )}
+                  {/* 图片计数 */}
+                  {currentStep.images.length > 1 && (
+                    <div className="workstation__image-counter">
+                      {currentImageIndex + 1} / {currentStep.images.length}
+                    </div>
+                  )}
+                </>
               ) : (
                 <div className="workstation__step-emoji">
                   {currentStep.imageUrl || '📋'}

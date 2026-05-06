@@ -243,17 +243,6 @@ class SyncManager {
    * @returns {Function} 取消监听的函数（便于调用方快速移除）
    */
   onMessage(type, callback) {
-    return this.subscribe(type, callback)
-  }
-
-  /**
-   * 注册指定消息类型的监听器（subscribe 是 onMessage 的别名）
-   *
-   * @param {string} type - 消息类型
-   * @param {Function} callback - 回调函数，接收 payload 作为参数
-   * @returns {Function} 取消监听的函数（便于调用方快速移除）
-   */
-  subscribe(type, callback) {
     if (this._destroyed) {
       console.warn('[SyncManager] 实例已销毁，无法注册监听器')
       return () => {}
@@ -271,6 +260,13 @@ class SyncManager {
 
     // 返回取消监听的便捷函数
     return () => this.removeListener(type, callback)
+  }
+
+  /**
+   * subscribe 是 onMessage 的别名
+   */
+  subscribe(type, callback) {
+    return this.onMessage(type, callback)
   }
 
   /**

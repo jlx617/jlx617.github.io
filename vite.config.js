@@ -4,5 +4,6 @@ import { viteSingleFile } from 'vite-plugin-singlefile'
 
 // https://vite.dev/config/
 export default defineConfig({
+  cacheDir: '/tmp/vite-cache-xgf',
   plugins: [react(), viteSingleFile()],
 })

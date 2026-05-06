@@ -3,14 +3,26 @@
  * React Context 用于在组件间共享 GuideEngine 实例
  * 提供引擎的创建、启动、控制和状态访问
  *
- * 集成功能：视觉检测、语音指令、BroadcastChannel 同步、情绪追踪
+ * 集成功能V2：视觉检测、语音指令、BroadcastChannel 同步、情绪追踪
  */
 
 import { createContext, useContext, useRef, useState, useCallback, useEffect } from 'react';
 import GuideEngine, { STATES } from './GuideEngine';
 import { speak as speechSpeak, speakWithCallback } from '../utils/speech';
 import { updateEmployee, addAlert, addSessionLog, initStore, updateEmployeeActivity } from '../data/store';
-import { syncManager } from '../utils/sync';
+
+/** BroadcastChannel 辅助函数，避免 minifier 优化导致的方法丢失 */
+let _syncChannel = null;
+function _getSyncChannel() {
+  if (!_syncChannel) {
+    try { _syncChannel = new BroadcastChannel('xgf_v2_sync'); } catch(e) { console.warn('BroadcastChannel不可用'); }
+  }
+  return _syncChannel;
+}
+function _syncBroadcast(type, data) {
+  const ch = _getSyncChannel();
+  if (ch) try { ch.postMessage({ type, payload: data }); } catch(e) {}
+}
 
 /**
  * React Context 对象
@@ -92,7 +104,7 @@ export function GuideEngineProvider({ children, template, employeeId = 'emp_001'
         engineRef.current.setEmotion(result.emotion);
       }
       // 广播情绪更新给辅导员端
-      syncManager.broadcast('emotion_update', { employeeId, emotion: result.emotion });
+      _syncBroadcast('emotion_update', { employeeId, emotion: result.emotion });
     }
   }, [detectedEmotion, employeeId]);
 
@@ -150,27 +162,33 @@ export function GuideEngineProvider({ children, template, employeeId = 'emp_001'
   useEffect(() => {
     /**
      * 监听来自辅导员端的 voice_intervention 消息
-     * 辅导员可通过语音干预指导员工操作
+     * 直接使用 BroadcastChannel API，避免 syncManager 方法名被 minifier 优化的问题
      */
-    const unsubscribe = syncManager.onMessage('voice_intervention', (payload) => {
-      if (payload && payload.employeeId === employeeId && payload.text) {
-        // 使用带回调的语音播报，播报完成后可触发后续动作
-        try {
-          speakWithCallback(payload.text, () => {
-            addSessionLog(employeeId, {
-              type: 'intervention',
-              content: '辅导员语音干预已播报: ' + payload.text
+    let channel = null;
+    try {
+      channel = new BroadcastChannel('xgf_v2_sync');
+      channel.onmessage = (event) => {
+        const { type, payload } = event.data || {};
+        if (type === 'voice_intervention' && payload && payload.employeeId === employeeId && payload.text) {
+          try {
+            speakWithCallback(payload.text, () => {
+              addSessionLog(employeeId, {
+                type: 'intervention',
+                content: '辅导员语音干预已播报: ' + payload.text
+              });
             });
-          });
-        } catch (e) {
-          console.warn('辅导员语音干预播报失败:', e);
+          } catch (e) {
+            console.warn('辅导员语音干预播报失败:', e);
+          }
         }
-      }
-    });
+      };
+    } catch (e) {
+      console.warn('BroadcastChannel 不可用:', e);
+    }
 
     return () => {
-      if (typeof unsubscribe === 'function') {
-        unsubscribe();
+      if (channel) {
+        channel.close();
       }
     };
   }, [employeeId]);
@@ -195,7 +213,7 @@ export function GuideEngineProvider({ children, template, employeeId = 'emp_001'
             content: 'AI状态变化: ' + state
           });
           // BroadcastChannel 同步：广播员工状态更新
-          syncManager.broadcast('employee_state_update', {
+          _syncBroadcast('employee_state_update', {
             employeeId,
             state,
             stepIndex: engineRef.current.getState().currentStepIndex
@@ -242,7 +260,7 @@ export function GuideEngineProvider({ children, template, employeeId = 'emp_001'
           });
         }
         // BroadcastChannel 同步：广播告警
-        syncManager.broadcast('alert', { employeeId, type, data });
+        _syncBroadcast('alert', { employeeId, type, data });
         // 调用外部回调
         if (onAlert) onAlert(type, data);
       },
@@ -251,7 +269,7 @@ export function GuideEngineProvider({ children, template, employeeId = 'emp_001'
       }),
       onStepProgress: (stepIndex, totalSteps) => {
         // BroadcastChannel 同步：广播步骤进度
-        syncManager.broadcast('step_progress', { employeeId, stepIndex, totalSteps });
+        _syncBroadcast('step_progress', { employeeId, stepIndex, totalSteps });
       }
     });
 

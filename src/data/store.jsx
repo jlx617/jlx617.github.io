@@ -32,10 +32,10 @@ const DEFAULT_TEMPLATES = [
         title: '取杯子',
         description: '从杯子架取一个中号纸杯',
         images: [
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s1-1.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s1-2.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s1-3.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s1-4.jpg'
+          '/steps/coffee/s1-1.jpg',
+          '/steps/coffee/s1-2.jpg',
+          '/steps/coffee/s1-3.jpg',
+          '/steps/coffee/s1-4.jpg'
         ],
         voiceText: '小明，请从杯子架取一个中号纸杯',
         guideTips: '注意看杯子架上的标签，中号杯是蓝色的',
@@ -46,10 +46,10 @@ const DEFAULT_TEMPLATES = [
         title: '放杯垫',
         description: '在杯托上放一张杯垫',
         images: [
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s2-1.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s2-2.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s2-3.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s2-4.jpg'
+          '/steps/coffee/s2-1.jpg',
+          '/steps/coffee/s2-2.jpg',
+          '/steps/coffee/s2-3.jpg',
+          '/steps/coffee/s2-4.jpg'
         ],
         voiceText: '很好！现在请把杯垫放在咖啡机上',
         guideTips: '杯垫就在咖啡机旁边的盒子里',
@@ -60,10 +60,10 @@ const DEFAULT_TEMPLATES = [
         title: '按浓缩键',
         description: '按下咖啡机上的双份浓缩按钮',
         images: [
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s3-1.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s3-2.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s3-3.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s3-4.jpg'
+          '/steps/coffee/s3-1.jpg',
+          '/steps/coffee/s3-2.jpg',
+          '/steps/coffee/s3-3.jpg',
+          '/steps/coffee/s3-4.jpg'
         ],
         voiceText: '请按下咖啡机上标有双份浓缩的按钮',
         guideTips: '按钮在咖啡机右侧，上面有一个小小的咖啡杯图标',
@@ -74,10 +74,10 @@ const DEFAULT_TEMPLATES = [
         title: '加热水',
         description: '向杯中加入热水至八分满',
         images: [
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s4-1.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s4-2.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s4-3.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s4-4.jpg'
+          '/steps/coffee/s4-1.jpg',
+          '/steps/coffee/s4-2.jpg',
+          '/steps/coffee/s4-3.jpg',
+          '/steps/coffee/s4-4.jpg'
         ],
         voiceText: '请向杯中加入热水，加到八分满的位置',
         guideTips: '慢慢倒，不要倒太满哦',
@@ -88,10 +88,10 @@ const DEFAULT_TEMPLATES = [
         title: '搅拌',
         description: '用搅拌棒轻轻搅拌3圈',
         images: [
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s5-1.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s5-2.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s5-3.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s5-4.jpg'
+          '/steps/coffee/s5-1.jpg',
+          '/steps/coffee/s5-2.jpg',
+          '/steps/coffee/s5-3.jpg',
+          '/steps/coffee/s5-4.jpg'
         ],
         voiceText: '请用搅拌棒轻轻搅拌三圈',
         guideTips: '顺着一个方向搅拌就好',
@@ -102,10 +102,10 @@ const DEFAULT_TEMPLATES = [
         title: '递给客人',
         description: '将咖啡放在取餐区',
         images: [
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s6-1.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s6-2.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s6-3.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/coffee/s6-4.jpg'
+          '/steps/coffee/s6-1.jpg',
+          '/steps/coffee/s6-2.jpg',
+          '/steps/coffee/s6-3.jpg',
+          '/steps/coffee/s6-4.jpg'
         ],
         voiceText: '太棒了！请把咖啡放在取餐区，微笑对客人说：您好，您的咖啡好了',
         guideTips: '记得要微笑哦',
@@ -123,10 +123,10 @@ const DEFAULT_TEMPLATES = [
         title: '检查货架标签',
         description: '查看货架上每个区域的商品标签',
         images: [
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s1-1.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s1-2.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s1-3.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s1-4.jpg'
+          '/steps/supermarket/s1-1.jpg',
+          '/steps/supermarket/s1-2.jpg',
+          '/steps/supermarket/s1-3.jpg',
+          '/steps/supermarket/s1-4.jpg'
         ],
         voiceText: '请先看一下货架上的标签，确认每个区域应该放什么商品',
         guideTips: '标签在货架最上方的横条上，用不同颜色区分不同区域',
@@ -137,10 +137,10 @@ const DEFAULT_TEMPLATES = [
         title: '取整理箱',
         description: '从仓库取一个整理箱',
         images: [
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s2-1.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s2-2.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s2-3.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s2-4.jpg'
+          '/steps/supermarket/s2-1.jpg',
+          '/steps/supermarket/s2-2.jpg',
+          '/steps/supermarket/s2-3.jpg',
+          '/steps/supermarket/s2-4.jpg'
         ],
         voiceText: '请去仓库取一个整理箱，用来装需要补货的商品',
         guideTips: '整理箱在仓库入口右手边，蓝色的大箱子',
@@ -151,10 +151,10 @@ const DEFAULT_TEMPLATES = [
         title: '补货上架',
         description: '将商品按照标签放到对应位置',
         images: [
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s3-1.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s3-2.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s3-3.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s3-4.jpg'
+          '/steps/supermarket/s3-1.jpg',
+          '/steps/supermarket/s3-2.jpg',
+          '/steps/supermarket/s3-3.jpg',
+          '/steps/supermarket/s3-4.jpg'
         ],
         voiceText: '请把整理箱里的商品，按照标签放到对应的货架上',
         guideTips: '注意商品正面要朝外，价格标签要对着顾客',
@@ -165,10 +165,10 @@ const DEFAULT_TEMPLATES = [
         title: '检查日期',
         description: '检查所有商品的生产日期',
         images: [
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s4-1.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s4-2.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s4-3.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s4-4.jpg'
+          '/steps/supermarket/s4-1.jpg',
+          '/steps/supermarket/s4-2.jpg',
+          '/steps/supermarket/s4-3.jpg',
+          '/steps/supermarket/s4-4.jpg'
         ],
         voiceText: '请检查一下货架上商品的生产日期，把快过期的放到前面',
         guideTips: '日期在商品包装的底部，找到印有"生产日期"的小字',
@@ -179,10 +179,10 @@ const DEFAULT_TEMPLATES = [
         title: '整理外观',
         description: '把商品摆放整齐，正面朝外',
         images: [
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s5-1.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s5-2.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s5-3.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s5-4.jpg'
+          '/steps/supermarket/s5-1.jpg',
+          '/steps/supermarket/s5-2.jpg',
+          '/steps/supermarket/s5-3.jpg',
+          '/steps/supermarket/s5-4.jpg'
         ],
         voiceText: '请把商品摆放整齐，确保每个商品的正面都朝外',
         guideTips: '用手轻轻把商品往前推，让它们排成一条直线',
@@ -193,10 +193,10 @@ const DEFAULT_TEMPLATES = [
         title: '归还整理箱',
         description: '将整理箱放回仓库',
         images: [
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s6-1.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s6-2.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s6-3.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/supermarket/s6-4.jpg'
+          '/steps/supermarket/s6-1.jpg',
+          '/steps/supermarket/s6-2.jpg',
+          '/steps/supermarket/s6-3.jpg',
+          '/steps/supermarket/s6-4.jpg'
         ],
         voiceText: '很好！最后请把整理箱放回仓库原来的位置',
         guideTips: '记得把整理箱叠放整齐，方便下次使用',
@@ -214,10 +214,10 @@ const DEFAULT_TEMPLATES = [
         title: '收走餐具',
         description: '将桌面上的餐具收走',
         images: [
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s1-1.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s1-2.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s1-3.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s1-4.jpg'
+          '/steps/restaurant/s1-1.jpg',
+          '/steps/restaurant/s1-2.jpg',
+          '/steps/restaurant/s1-3.jpg',
+          '/steps/restaurant/s1-4.jpg'
         ],
         voiceText: '请把桌面上的碗、盘子、筷子收起来，放到收餐车上',
         guideTips: '小心碗是热的，用托盘端比较安全',
@@ -228,10 +228,10 @@ const DEFAULT_TEMPLATES = [
         title: '清理残渣',
         description: '用抹布擦去桌面食物残渣',
         images: [
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s2-1.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s2-2.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s2-3.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s2-4.jpg'
+          '/steps/restaurant/s2-1.jpg',
+          '/steps/restaurant/s2-2.jpg',
+          '/steps/restaurant/s2-3.jpg',
+          '/steps/restaurant/s2-4.jpg'
         ],
         voiceText: '请用抹布把桌面上的食物残渣擦干净',
         guideTips: '从桌子的一边擦到另一边，不要来回擦',
@@ -242,10 +242,10 @@ const DEFAULT_TEMPLATES = [
         title: '喷洒清洁剂',
         description: '在桌面均匀喷洒清洁剂',
         images: [
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s3-1.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s3-2.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s3-3.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s3-4.jpg'
+          '/steps/restaurant/s3-1.jpg',
+          '/steps/restaurant/s3-2.jpg',
+          '/steps/restaurant/s3-3.jpg',
+          '/steps/restaurant/s3-4.jpg'
         ],
         voiceText: '请拿清洁剂，在桌面上均匀地喷一下',
         guideTips: '距离桌面大约20厘米喷，不要喷太多',
@@ -256,10 +256,10 @@ const DEFAULT_TEMPLATES = [
         title: '擦拭桌面',
         description: '用干净抹布擦拭整个桌面',
         images: [
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s4-1.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s4-2.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s4-3.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s4-4.jpg'
+          '/steps/restaurant/s4-1.jpg',
+          '/steps/restaurant/s4-2.jpg',
+          '/steps/restaurant/s4-3.jpg',
+          '/steps/restaurant/s4-4.jpg'
         ],
         voiceText: '请用干净的抹布把整个桌面擦一遍',
         guideTips: '用打圈的方式擦，确保每个角落都擦到',
@@ -270,10 +270,10 @@ const DEFAULT_TEMPLATES = [
         title: '摆放餐具',
         description: '摆放新的餐具和纸巾',
         images: [
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s5-1.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s5-2.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s5-3.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s5-4.jpg'
+          '/steps/restaurant/s5-1.jpg',
+          '/steps/restaurant/s5-2.jpg',
+          '/steps/restaurant/s5-3.jpg',
+          '/steps/restaurant/s5-4.jpg'
         ],
         voiceText: '请摆放新的餐具和纸巾，按照标准位置放好',
         guideTips: '筷子放在碗的右边，纸巾放在碗的左边',
@@ -284,10 +284,10 @@ const DEFAULT_TEMPLATES = [
         title: '检查确认',
         description: '检查桌面是否干净整洁',
         images: [
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s6-1.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s6-2.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s6-3.jpg',
-          'https://raw.githubusercontent.com/jlx617/jlx617.github.io/gh-pages/steps/restaurant/s6-4.jpg'
+          '/steps/restaurant/s6-1.jpg',
+          '/steps/restaurant/s6-2.jpg',
+          '/steps/restaurant/s6-3.jpg',
+          '/steps/restaurant/s6-4.jpg'
         ],
         voiceText: '最后请检查一下桌面是否干净整洁，如果满意就完成啦！',
         guideTips: '站在桌子的对面看一眼，确认没有遗漏的地方',

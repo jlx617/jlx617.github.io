@@ -57,21 +57,20 @@ export default function CameraView({
   onToggle,
 }) {
   // ---------- 状态 ----------
-  const [cameraStatus, setCameraStatus] = useState(DETECTION_STATUS.IDLE);  // 摄像头状态
-  const [errorMessage, setErrorMessage] = useState('');                       // 错误信息
-  const [handDetected, setHandDetected] = useState(false);                   // 是否检测到手部
-  const [emotionDetected, setEmotionDetected] = useState(false);             // 是否检测到情绪
-  const [currentGesture, setCurrentGesture] = useState('');                  // 当前手势
-  const [currentEmotion, setCurrentEmotion] = useState('');                  // 当前情绪
-  const [currentPose, setCurrentPose] = useState('');                        // 当前姿态
+  const [cameraStatus, setCameraStatus] = useState(DETECTION_STATUS.IDLE);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [handDetected, setHandDetected] = useState(false);
+  const [emotionDetected, setEmotionDetected] = useState(false);
+  const [currentGesture, setCurrentGesture] = useState('');
+  const [currentEmotion, setCurrentEmotion] = useState('');
+  const [currentPose, setCurrentPose] = useState('');
 
   // ---------- 引用 ----------
-  const videoRef = useRef(null);                   // 视频元素引用
-  const detectorRef = useRef(null);                // VisionDetector 实例引用
-  const animationFrameRef = useRef(null);          // 动画帧引用
-  const streamRef = useRef(null);                  // 媒体流引用
-  const prevGestureRef = useRef('');               // 上一帧手势（用于去重）
-  const prevEmotionRef = useRef('');               // 上一帧情绪（用于去重）
+  const videoRef = useRef(null);
+  const detectorRef = useRef(null);
+  const streamRef = useRef(null);
+  const prevGestureRef = useRef('');
+  const prevEmotionRef = useRef('');
 
   // ---------- 初始化摄像头 ----------
   const initCamera = useCallback(async () => {
@@ -84,34 +83,83 @@ export default function CameraView({
         video: {
           width: { ideal: 320 },
           height: { ideal: 240 },
-          facingMode: 'user',  // 使用前置摄像头
+          facingMode: 'user',
         },
         audio: false,
       });
 
-      // 保存媒体流引用
       streamRef.current = stream;
 
       // 将视频流绑定到 video 元素
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        await videoRef.current.play();
+        // 等待视频元数据加载
+        await new Promise((resolve, reject) => {
+          videoRef.current.onloadedmetadata = () => {
+            videoRef.current.play()
+              .then(resolve)
+              .catch(reject);
+          };
+          videoRef.current.onerror = reject;
+        });
       }
 
       // 初始化视觉检测器
       const detector = new VisionDetector();
+      await detector.init(videoRef.current);
       detectorRef.current = detector;
 
       // 标记为活跃状态
       setCameraStatus(DETECTION_STATUS.ACTIVE);
 
-      // 启动检测循环
-      startDetectionLoop();
+      // 启动检测
+      detector.startDetection((result) => {
+        if (!result) return;
+
+        // ---- 手势检测 ----
+        if (result.hands && result.hands.detected) {
+          setHandDetected(true);
+          const gesture = result.hands.gesture;
+          setCurrentGesture(result.hands.label || gesture);
+
+          if (gesture && gesture !== 'unknown' && gesture !== prevGestureRef.current) {
+            prevGestureRef.current = gesture;
+            onGestureDetected?.(gesture);
+          }
+        } else {
+          setHandDetected(false);
+          setCurrentGesture('');
+          prevGestureRef.current = '';
+        }
+
+        // ---- 情绪检测 ----
+        if (result.face && result.face.detected) {
+          setEmotionDetected(true);
+          const emotion = result.face.emotion;
+          setCurrentEmotion(result.face.label || emotion);
+
+          if (emotion && emotion !== 'unknown' && emotion !== prevEmotionRef.current) {
+            prevEmotionRef.current = emotion;
+            onEmotionDetected?.(emotion);
+          }
+        } else {
+          setEmotionDetected(false);
+          setCurrentEmotion('');
+          prevEmotionRef.current = '';
+        }
+
+        // ---- 姿态检测 ----
+        if (result.pose && result.pose.detected) {
+          setCurrentPose(result.pose.label || result.pose.action);
+          onPoseDetected?.(result.pose.action);
+        } else {
+          setCurrentPose('');
+        }
+      });
 
     } catch (err) {
       console.error('[CameraView] 摄像头初始化失败:', err);
 
-      // 根据错误类型设置不同的错误信息
       if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
         setErrorMessage('摄像头权限被拒绝，请在浏览器设置中允许访问摄像头');
       } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
@@ -124,14 +172,14 @@ export default function CameraView({
 
       setCameraStatus(DETECTION_STATUS.ERROR);
     }
-  }, []);
+  }, [onGestureDetected, onEmotionDetected, onPoseDetected]);
 
   // ---------- 停止摄像头 ----------
   const stopCamera = useCallback(() => {
-    // 停止检测循环
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
-      animationFrameRef.current = null;
+    // 停止检测器
+    if (detectorRef.current) {
+      detectorRef.current.destroy();
+      detectorRef.current = null;
     }
 
     // 停止媒体流
@@ -145,11 +193,6 @@ export default function CameraView({
       videoRef.current.srcObject = null;
     }
 
-    // 销毁检测器
-    if (detectorRef.current) {
-      detectorRef.current = null;
-    }
-
     // 重置状态
     setCameraStatus(DETECTION_STATUS.IDLE);
     setHandDetected(false);
@@ -161,100 +204,15 @@ export default function CameraView({
     prevEmotionRef.current = '';
   }, []);
 
-  // ---------- 检测循环 ----------
-  const startDetectionLoop = useCallback(() => {
-    const detect = async () => {
-      const detector = detectorRef.current;
-      const video = videoRef.current;
-
-      if (!detector || !video || video.readyState < 2) {
-        // 视频未就绪，继续等待
-        animationFrameRef.current = requestAnimationFrame(detect);
-        return;
-      }
-
-      try {
-        // 执行视觉检测
-        const results = await detector.detect(video);
-
-        if (results) {
-          // ---- 手势检测 ----
-          if (results.gesture) {
-            setHandDetected(true);
-            const gesture = results.gesture;
-            setCurrentGesture(gesture);
-
-            // 手势变化时回调（去重：与上一帧不同才触发）
-            if (gesture !== prevGestureRef.current) {
-              prevGestureRef.current = gesture;
-
-              // 将手势名称转换为下划线格式
-              const gestureKey = gesture
-                .toLowerCase()
-                .replace(/\s+/g, '_');
-
-              // 检测到"竖大拇指"手势时触发回调
-              if (gestureKey === 'thumbs_up' || gestureKey === 'thumbsup') {
-                onGestureDetected?.('thumbs_up');
-              } else {
-                onGestureDetected?.(gestureKey);
-              }
-            }
-          } else {
-            setHandDetected(false);
-            setCurrentGesture('');
-            prevGestureRef.current = '';
-          }
-
-          // ---- 情绪检测 ----
-          if (results.emotion) {
-            setEmotionDetected(true);
-            const emotion = results.emotion;
-            setCurrentEmotion(emotion);
-
-            // 情绪变化时回调（去重：与上一帧不同才触发）
-            if (emotion !== prevEmotionRef.current) {
-              prevEmotionRef.current = emotion;
-              onEmotionDetected?.(emotion);
-            }
-          } else {
-            setEmotionDetected(false);
-            setCurrentEmotion('');
-            prevEmotionRef.current = '';
-          }
-
-          // ---- 姿态检测 ----
-          if (results.pose) {
-            setCurrentPose(results.pose);
-            onPoseDetected?.(results.pose);
-          } else {
-            setCurrentPose('');
-          }
-        }
-      } catch (err) {
-        // 检测过程中出错，不中断循环，仅打印警告
-        console.warn('[CameraView] 检测出错:', err);
-      }
-
-      // 继续下一帧检测
-      animationFrameRef.current = requestAnimationFrame(detect);
-    };
-
-    // 启动检测循环
-    animationFrameRef.current = requestAnimationFrame(detect);
-  }, [onGestureDetected, onEmotionDetected, onPoseDetected]);
-
-  // ---------- 生命周期：挂载时初始化摄像头 ----------
+  // ---------- 生命周期 ----------
   useEffect(() => {
     if (visible) {
       initCamera();
     }
 
-    // 卸载时停止摄像头
     return () => {
       stopCamera();
     };
-    // 注意：仅在 visible 变化时重新初始化，避免回调变化导致重复初始化
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible]);
 
@@ -270,12 +228,10 @@ export default function CameraView({
   if (cameraStatus === DETECTION_STATUS.ERROR) {
     return (
       <div className="camera-view camera-view--error">
-        {/* 错误提示 */}
         <div className="camera-view__error-content">
           <div className="camera-view__error-icon">!</div>
           <div className="camera-view__error-text">{errorMessage || '摄像头异常'}</div>
         </div>
-        {/* 切换按钮 */}
         <button
           className="camera-view__toggle-btn"
           onClick={onToggle}
@@ -291,12 +247,10 @@ export default function CameraView({
   if (cameraStatus === DETECTION_STATUS.LOADING) {
     return (
       <div className="camera-view camera-view--loading">
-        {/* 加载动画 */}
         <div className="camera-view__loading-content">
           <div className="camera-view__loading-spinner" />
           <div className="camera-view__loading-text">正在启动摄像头...</div>
         </div>
-        {/* 切换按钮 */}
         <button
           className="camera-view__toggle-btn"
           onClick={onToggle}
@@ -311,7 +265,6 @@ export default function CameraView({
   // ---------- 渲染：正常预览 ----------
   return (
     <div className="camera-view">
-      {/* 视频预览区域 */}
       <div className="camera-view__preview">
         <video
           ref={videoRef}
@@ -321,7 +274,6 @@ export default function CameraView({
           muted
         />
 
-        {/* 检测状态指示器 - 脉冲绿点 */}
         <div className="camera-view__status-indicator">
           <span
             className={`camera-view__status-dot ${
@@ -334,21 +286,17 @@ export default function CameraView({
           <span className="camera-view__status-label">{statusConfig.label}</span>
         </div>
 
-        {/* 检测结果标签 */}
         <div className="camera-view__detection-labels">
-          {/* 手势标签 */}
           {handDetected && currentGesture && (
             <span className="camera-view__label camera-view__label--gesture">
               {currentGesture}
             </span>
           )}
-          {/* 情绪标签 */}
           {emotionDetected && currentEmotion && (
             <span className="camera-view__label camera-view__label--emotion">
               {currentEmotion}
             </span>
           )}
-          {/* 姿态标签 */}
           {currentPose && (
             <span className="camera-view__label camera-view__label--pose">
               {currentPose}
@@ -357,7 +305,6 @@ export default function CameraView({
         </div>
       </div>
 
-      {/* 切换按钮 */}
       <button
         className="camera-view__toggle-btn"
         onClick={onToggle}

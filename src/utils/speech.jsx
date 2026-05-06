@@ -106,6 +106,10 @@ export function speak(text, options = {}) {
     if (options.onError) {
       options.onError(new Error('浏览器不支持语音合成'));
     }
+    // 即使不支持也触发 onEnd，确保流程不卡住
+    if (options.onEnd) {
+      setTimeout(() => options.onEnd(), 300);
+    }
     return { stop: () => {} };
   }
 
@@ -128,17 +132,40 @@ export function speak(text, options = {}) {
     utterance.voice = zhVoice;
   }
 
+  let utteranceStarted = false;
+  let fallbackTimer = null;
+
   // 绑定事件
+  utterance.onstart = () => {
+    utteranceStarted = true;
+    if (fallbackTimer) { clearTimeout(fallbackTimer); fallbackTimer = null; }
+  };
+
   utterance.onend = () => {
     currentUtterance = null;
+    if (fallbackTimer) { clearTimeout(fallbackTimer); fallbackTimer = null; }
     if (options.onEnd) options.onEnd();
   };
 
   utterance.onerror = (event) => {
     currentUtterance = null;
+    if (fallbackTimer) { clearTimeout(fallbackTimer); fallbackTimer = null; }
     console.error('语音合成出错:', event);
     if (options.onError) options.onError(event);
+    // 出错时也触发 onEnd，确保流程不卡住
+    if (options.onEnd) options.onEnd();
   };
+
+  // 兜底：某些浏览器（如夸克）API存在但不发声也不触发事件
+  // 如果 2 秒内没有 onstart，直接触发 onEnd 让流程继续
+  fallbackTimer = setTimeout(() => {
+    if (!utteranceStarted) {
+      console.warn('[TTS] 语音播报未响应，自动跳过');
+      try { window.speechSynthesis.cancel(); } catch(e) {}
+      currentUtterance = null;
+      if (options.onEnd) options.onEnd();
+    }
+  }, 2000);
 
   // 保存引用并开始播报
   currentUtterance = utterance;
@@ -147,6 +174,7 @@ export function speak(text, options = {}) {
   // 返回控制对象
   return {
     stop: () => {
+      if (fallbackTimer) { clearTimeout(fallbackTimer); fallbackTimer = null; }
       if (currentUtterance) {
         window.speechSynthesis.cancel();
         currentUtterance = null;

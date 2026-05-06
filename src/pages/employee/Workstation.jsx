@@ -16,7 +16,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { GuideEngineProvider, useGuideEngine } from '../../engine/GuideEngineContext';
-import { speak, stopSpeech, isSpeaking, startListening, stopListening } from '../../utils/speech';
+import { speak, stopSpeech, isSpeaking, startListening, stopListening, isSpeechRecognitionSupported } from '../../utils/speech';
 import { initStore, getEmployee, getTemplates, getTemplate } from '../../data/store';
 import CameraView from '../../components/CameraView';
 import TaskComplete from './TaskComplete';
@@ -141,6 +141,8 @@ function WorkstationInner({ templateName }) {
   // ---------- 语音识别相关状态 ----------
   const [isListening, setIsListening] = useState(false);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
+  const [voiceSupported, setVoiceSupported] = useState(true); // 语音识别是否支持
+  const [voiceToast, setVoiceToast] = useState(''); // 语音提示消息
 
   // ---------- 引用 ----------
   const waitTimerRef = useRef(null);
@@ -181,6 +183,13 @@ function WorkstationInner({ templateName }) {
 
     // 设置任务开始时间
     setTaskStartTime(Date.now());
+
+    // 检测语音识别是否支持
+    const supported = isSpeechRecognitionSupported();
+    setVoiceSupported(supported);
+    if (!supported) {
+      console.log('[Workstation] 当前浏览器不支持语音识别');
+    }
   }, []);
 
   // ---------- 准备倒计时 ----------
@@ -330,35 +339,51 @@ function WorkstationInner({ templateName }) {
   const handleStartListening = useCallback(() => {
     if (isListening) return;
 
+    // 检查浏览器是否支持语音识别
+    if (!voiceSupported) {
+      setVoiceToast('当前浏览器不支持语音识别，请使用Chrome/Safari浏览器');
+      setTimeout(() => setVoiceToast(''), 3000);
+      return;
+    }
+
     setIsListening(true);
+    setVoiceToast('请说话...');
 
     // 5秒后自动停止
     if (voiceTimerRef.current) clearTimeout(voiceTimerRef.current);
     voiceTimerRef.current = setTimeout(() => {
       stopListening();
       setIsListening(false);
+      setVoiceToast('');
       voiceTimerRef.current = null;
     }, 5000);
 
     startListening({
       continuous: false,
-      onResult: handleVoiceResult,
+      onResult: (text) => {
+        handleVoiceResult(text);
+        setVoiceToast(`识别到: ${text}`);
+        setTimeout(() => setVoiceToast(''), 2000);
+      },
       onEnd: () => {
         setIsListening(false);
+        setVoiceToast('');
         if (voiceTimerRef.current) {
           clearTimeout(voiceTimerRef.current);
           voiceTimerRef.current = null;
         }
       },
-      onError: () => {
+      onError: (err) => {
         setIsListening(false);
+        setVoiceToast('语音识别出错，请重试');
+        setTimeout(() => setVoiceToast(''), 2000);
         if (voiceTimerRef.current) {
           clearTimeout(voiceTimerRef.current);
           voiceTimerRef.current = null;
         }
       },
     });
-  }, [isListening, handleVoiceResult]);
+  }, [isListening, handleVoiceResult, voiceSupported]);
 
   // ---------- 停止语音识别 ----------
   const handleStopListening = useCallback(() => {
@@ -515,9 +540,23 @@ function WorkstationInner({ templateName }) {
             }`}
             key={currentStepIndex}
           >
-            {/* 大号Emoji配图（使用imageUrl字段） */}
-            <div className="workstation__step-emoji">
-              {currentStep.imageUrl || '📋'}
+            {/* 步骤指导图片 */}
+            <div className="workstation__step-image">
+              {currentStep.imageUrl && currentStep.imageUrl.startsWith('/') ? (
+                <img
+                  src={currentStep.imageUrl}
+                  alt={currentStep.title || '步骤指导'}
+                  className="workstation__step-img"
+                  onError={(e) => {
+                    // 图片加载失败时隐藏
+                    e.target.style.display = 'none';
+                  }}
+                />
+              ) : (
+                <div className="workstation__step-emoji">
+                  {currentStep.imageUrl || '📋'}
+                </div>
+              )}
             </div>
 
             {/* 步骤标题（超大字体） */}
@@ -605,9 +644,10 @@ function WorkstationInner({ templateName }) {
         <div className="workstation__action-bar">
           {/* 语音识别按钮 */}
           <button
-            className={`workstation__voice-btn ${isListening ? 'workstation__voice-btn--listening' : ''}`}
+            className={`workstation__voice-btn ${isListening ? 'workstation__voice-btn--listening' : ''} ${!voiceSupported ? 'workstation__voice-btn--disabled' : ''}`}
             onClick={isListening ? handleStopListening : handleStartListening}
-            title={isListening ? '停止语音识别' : '点击说话'}
+            title={!voiceSupported ? '当前浏览器不支持语音识别' : (isListening ? '停止语音识别' : '点击说话')}
+            disabled={!voiceSupported}
           >
             {isListening ? (
               <span className="workstation__voice-btn-pulse">
@@ -618,9 +658,16 @@ function WorkstationInner({ templateName }) {
               '🎤'
             )}
             <span className="workstation__voice-btn-label">
-              {isListening ? '正在听...' : '语音'}
+              {isListening ? '正在听...' : (voiceSupported ? '语音' : '不支持')}
             </span>
           </button>
+
+          {/* 语音提示 Toast */}
+          {voiceToast && (
+            <div className="workstation__voice-toast">
+              {voiceToast}
+            </div>
+          )}
 
           {/* 模拟按钮（桌面端直接显示，移动端折叠到"更多"菜单） */}
           <div className="workstation__demo-buttons">

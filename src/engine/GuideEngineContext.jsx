@@ -152,7 +152,7 @@ export function GuideEngineProvider({ children, template, employeeId = 'emp_001'
      * 监听来自辅导员端的 voice_intervention 消息
      * 辅导员可通过语音干预指导员工操作
      */
-    const unsubscribe = syncManager.subscribe('voice_intervention', (payload) => {
+    const unsubscribe = syncManager.onMessage('voice_intervention', (payload) => {
       if (payload && payload.employeeId === employeeId && payload.text) {
         // 使用带回调的语音播报，播报完成后可触发后续动作
         try {

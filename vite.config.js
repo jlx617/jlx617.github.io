@@ -6,4 +6,7 @@ import { viteSingleFile } from 'vite-plugin-singlefile'
 export default defineConfig({
   cacheDir: '/tmp/vite-cache-xgf',
   plugins: [react(), viteSingleFile()],
+  build: {
+    minify: false,
+  },
 })

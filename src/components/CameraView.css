@@ -1,0 +1,388 @@
+/**
+ * CameraView.css - 摄像头预览组件样式
+ * 心工坊V2 - 画中画风格摄像头叠加层
+ *
+ * 设计要点：
+ * - 固定在右下角，不遮挡主要工作区域
+ * - 圆角、阴影、半透明边框
+ * - 响应式：桌面端 200x150，移动端 120x90
+ * - 脉冲绿点指示器动画
+ */
+
+/* ========================================
+   容器样式
+   ======================================== */
+.camera-view {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+
+  /* 桌面端尺寸 */
+  width: 200px;
+
+  /* 圆角 */
+  border-radius: 12px;
+
+  /* 阴影效果 */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3),
+              0 0 0 1px rgba(255, 255, 255, 0.1);
+
+  /* 半透明背景（视频加载前显示） */
+  background: rgba(0, 0, 0, 0.6);
+
+  /* 半透明边框 */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  /* 过渡动画 */
+  transition: opacity 0.3s ease, transform 0.3s ease;
+
+  /* 溢出隐藏 */
+  overflow: hidden;
+}
+
+/* ========================================
+   视频预览区域
+   ======================================== */
+.camera-view__preview {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
+}
+
+.camera-view__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+
+  /* 水平镜像（自拍模式更自然） */
+  transform: scaleX(-1);
+}
+
+/* ========================================
+   检测状态指示器（左上角）
+   ======================================== */
+.camera-view__status-indicator {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* 状态圆点 */
+.camera-view__status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* 活跃状态的脉冲绿点动画 */
+.camera-view__status-dot--active {
+  animation: camera-view-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes camera-view-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(92, 184, 92, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(92, 184, 92, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(92, 184, 92, 0);
+  }
+}
+
+/* 状态标签文字 */
+.camera-view__status-label {
+  font-size: 10px;
+  color: #fff;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* ========================================
+   检测结果标签（底部叠加）
+   ======================================== */
+.camera-view__detection-labels {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  right: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.camera-view__label {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #fff;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 手势标签 - 蓝色 */
+.camera-view__label--gesture {
+  background: rgba(52, 152, 219, 0.7);
+}
+
+/* 情绪标签 - 紫色 */
+.camera-view__label--emotion {
+  background: rgba(155, 89, 182, 0.7);
+}
+
+/* 姿态标签 - 橙色 */
+.camera-view__label--pose {
+  background: rgba(230, 126, 34, 0.7);
+}
+
+/* ========================================
+   切换按钮（右上角）
+   ======================================== */
+.camera-view__toggle-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-size: 12px;
+  line-height: 20px;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background 0.2s ease;
+  z-index: 10;
+}
+
+.camera-view__toggle-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.camera-view__toggle-btn:active {
+  transform: scale(0.9);
+}
+
+/* ========================================
+   加载状态
+   ======================================== */
+.camera-view--loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+}
+
+.camera-view__loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+}
+
+.camera-view__loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #5cb85c;
+  border-radius: 50%;
+  animation: camera-view-spin 0.8s linear infinite;
+}
+
+@keyframes camera-view-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.camera-view__loading-text {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+}
+
+/* ========================================
+   错误状态
+   ======================================== */
+.camera-view--error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+  border-color: rgba(217, 83, 79, 0.4);
+}
+
+.camera-view__error-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px;
+}
+
+.camera-view__error-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(217, 83, 79, 0.8);
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 28px;
+  text-align: center;
+}
+
+.camera-view__error-text {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  max-width: 160px;
+  word-break: break-all;
+}
+
+/* ========================================
+   响应式设计 - 移动端适配
+   ======================================== */
+
+/* 平板及以下 */
+@media (max-width: 768px) {
+  .camera-view {
+    bottom: 12px;
+    right: 12px;
+    width: 160px;
+    border-radius: 10px;
+  }
+
+  .camera-view__preview {
+    border-radius: 10px 10px 0 0;
+  }
+
+  .camera-view__status-label {
+    font-size: 9px;
+  }
+
+  .camera-view__label {
+    font-size: 9px;
+  }
+}
+
+/* 手机端 */
+@media (max-width: 480px) {
+  .camera-view {
+    bottom: 8px;
+    right: 8px;
+    width: 120px;
+    border-radius: 8px;
+  }
+
+  .camera-view--loading,
+  .camera-view--error {
+    min-height: 90px;
+  }
+
+  .camera-view__preview {
+    border-radius: 8px 8px 0 0;
+  }
+
+  .camera-view__status-indicator {
+    top: 4px;
+    left: 4px;
+    padding: 1px 4px;
+    gap: 3px;
+  }
+
+  .camera-view__status-dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .camera-view__status-label {
+    font-size: 8px;
+  }
+
+  .camera-view__detection-labels {
+    bottom: 4px;
+    left: 4px;
+    right: 4px;
+    gap: 2px;
+  }
+
+  .camera-view__label {
+    font-size: 8px;
+    padding: 0px 4px;
+  }
+
+  .camera-view__toggle-btn {
+    width: 16px;
+    height: 16px;
+    font-size: 10px;
+    line-height: 16px;
+    top: 3px;
+    right: 3px;
+  }
+
+  .camera-view__loading-spinner {
+    width: 18px;
+    height: 18px;
+  }
+
+  .camera-view__loading-text {
+    font-size: 9px;
+  }
+
+  .camera-view__error-icon {
+    width: 22px;
+    height: 22px;
+    font-size: 13px;
+    line-height: 22px;
+  }
+
+  .camera-view__error-text {
+    font-size: 8px;
+    max-width: 100px;
+  }
+}
+
+/* ========================================
+   无障碍 - 减少动画偏好
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+  .camera-view__status-dot--active {
+    animation: none;
+  }
+
+  .camera-view__loading-spinner {
+    animation-duration: 2s;
+  }
+
+  .camera-view {
+    transition: none;
+  }
+}

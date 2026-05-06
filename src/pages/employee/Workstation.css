@@ -1,0 +1,1180 @@
+/* ========================================
+   员工全屏工作台样式 - 心工坊V2
+   设计理念：员工完全不需要操作，AI主动引导一切
+   ======================================== */
+
+/* ---------- 全屏布局 ---------- */
+.workstation {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #f0f7f0 0%, #fff8f0 100%);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  user-select: none;
+  position: relative;
+}
+
+/* ---------- 顶部状态栏 ---------- */
+.workstation__header {
+  flex-shrink: 0;
+  padding: 16px 24px 12px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* 头部顶行布局（返回按钮 + 信息 + 操作） */
+.workstation__header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.workstation__header-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.workstation__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.workstation__task-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a2e;
+  letter-spacing: 0.5px;
+}
+
+.workstation__step-counter {
+  font-size: 18px;
+  font-weight: 600;
+  color: #555;
+}
+
+/* 进度条 */
+.workstation__progress-bar {
+  width: 100%;
+  height: 12px;
+  border-radius: 6px;
+  background: #e8e8e8;
+  overflow: hidden;
+  position: relative;
+}
+
+.workstation__progress-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #e74c3c 0%, #f39c12 40%, #2ecc71 100%);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+/* 进度条光泽动画 */
+.workstation__progress-fill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  border-radius: 6px 6px 0 0;
+}
+
+/* ---------- 主显示区域 ---------- */
+.workstation__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 32px;
+  position: relative;
+  min-height: 0;
+}
+
+/* 步骤内容容器（带动画） */
+.workstation__step-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 800px;
+  animation: stepFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 步骤淡入动画 */
+@keyframes stepFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* 步骤淡出动画 */
+@keyframes stepFadeOut {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.05) translateY(-20px);
+  }
+}
+
+.workstation__step-content--exiting {
+  animation: stepFadeOut 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* 大号Emoji图标 */
+.workstation__step-emoji {
+  font-size: 120px;
+  line-height: 1;
+  margin-bottom: 24px;
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.1));
+  animation: emojiFloat 3s ease-in-out infinite;
+}
+
+@keyframes emojiFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* 步骤标题 */
+.workstation__step-title {
+  font-size: 48px;
+  font-weight: 800;
+  color: #1a1a2e;
+  margin-bottom: 16px;
+  line-height: 1.2;
+  letter-spacing: 2px;
+}
+
+/* 步骤描述 */
+.workstation__step-desc {
+  font-size: 28px;
+  font-weight: 400;
+  color: #444;
+  line-height: 1.5;
+  margin-bottom: 32px;
+  max-width: 600px;
+}
+
+/* ---------- 语音文字气泡 ---------- */
+.workstation__speech-bubble {
+  background: linear-gradient(135deg, #4a90d9 0%, #357abd 100%);
+  color: #fff;
+  padding: 16px 32px;
+  border-radius: 20px;
+  font-size: 24px;
+  line-height: 1.5;
+  max-width: 700px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(74, 144, 217, 0.3);
+  animation: bubbleSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 气泡上方小三角 */
+.workstation__speech-bubble::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #4a90d9;
+}
+
+@keyframes bubbleSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 语音播报时的脉冲动画 */
+.workstation__speech-bubble--speaking {
+  animation: bubbleSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    speechPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes speechPulse {
+  0%,
+  100% {
+    box-shadow: 0 4px 20px rgba(74, 144, 217, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 40px rgba(74, 144, 217, 0.6),
+      0 0 0 8px rgba(74, 144, 217, 0.1);
+  }
+}
+
+/* 打字机光标 */
+.workstation__speech-cursor {
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  background: #fff;
+  margin-left: 4px;
+  vertical-align: text-bottom;
+  animation: cursorBlink 0.8s step-end infinite;
+}
+
+@keyframes cursorBlink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ---------- AI状态指示器 ---------- */
+.workstation__ai-status {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+/* 不同AI状态的颜色 */
+.workstation__ai-status--speaking {
+  color: #27ae60;
+  background: rgba(39, 174, 96, 0.08);
+}
+
+.workstation__ai-status--waiting {
+  color: #f39c12;
+  background: rgba(243, 156, 18, 0.08);
+}
+
+.workstation__ai-status--reminding {
+  color: #e67e22;
+  background: rgba(230, 126, 34, 0.08);
+}
+
+.workstation__ai-status--demo {
+  color: #2980b9;
+  background: rgba(41, 128, 185, 0.08);
+}
+
+.workstation__ai-status--encouraging {
+  color: #f1c40f;
+  background: rgba(241, 196, 15, 0.08);
+}
+
+.workstation__ai-status--completed {
+  color: #27ae60;
+  background: rgba(39, 174, 96, 0.08);
+}
+
+.workstation__ai-status-icon {
+  font-size: 20px;
+  animation: statusPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.workstation__ai-timer {
+  font-size: 14px;
+  color: #888;
+  font-weight: 400;
+}
+
+/* ---------- 底部区域 ---------- */
+.workstation__footer {
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 12px 20px 16px;
+}
+
+/* 步骤缩略图 */
+.workstation__steps-thumbs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.workstation__steps-thumbs::-webkit-scrollbar {
+  display: none;
+}
+
+.workstation__step-thumb {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 64px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+/* 已完成步骤 */
+.workstation__step-thumb--completed {
+  opacity: 1;
+}
+
+.workstation__step-thumb--completed .workstation__step-thumb-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #27ae60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.workstation__step-thumb--completed .workstation__step-thumb-label {
+  font-size: 12px;
+  color: #27ae60;
+  font-weight: 600;
+}
+
+/* 当前步骤 */
+.workstation__step-thumb--current {
+  background: rgba(41, 128, 185, 0.1);
+}
+
+.workstation__step-thumb--current .workstation__step-thumb-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #2980b9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 20px;
+  animation: currentStepPulse 2s ease-in-out infinite;
+}
+
+.workstation__step-thumb--current .workstation__step-thumb-label {
+  font-size: 13px;
+  color: #2980b9;
+  font-weight: 700;
+}
+
+@keyframes currentStepPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(41, 128, 185, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(41, 128, 185, 0);
+  }
+}
+
+/* 未来步骤 */
+.workstation__step-thumb--future {
+  opacity: 0.4;
+}
+
+.workstation__step-thumb--future .workstation__step-thumb-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 16px;
+}
+
+.workstation__step-thumb--future .workstation__step-thumb-label {
+  font-size: 12px;
+  color: #999;
+  font-weight: 400;
+}
+
+/* 步骤之间的连接线 */
+.workstation__step-connector {
+  width: 20px;
+  height: 2px;
+  background: #ddd;
+  flex-shrink: 0;
+}
+
+.workstation__step-connector--completed {
+  background: #27ae60;
+}
+
+/* ---------- 模拟按钮（原型演示用） ---------- */
+.workstation__demo-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.workstation__demo-btn {
+  padding: 6px 16px;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  background: #fff;
+  color: #888;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.workstation__demo-btn:hover {
+  background: #f5f5f5;
+  border-color: #bbb;
+  color: #555;
+}
+
+.workstation__demo-btn--complete {
+  border-color: #27ae60;
+  color: #27ae60;
+}
+
+.workstation__demo-btn--complete:hover {
+  background: rgba(39, 174, 96, 0.1);
+}
+
+.workstation__demo-btn--help {
+  border-color: #e67e22;
+  color: #e67e22;
+}
+
+.workstation__demo-btn--help:hover {
+  background: rgba(230, 126, 34, 0.1);
+}
+
+/* ---------- 摄像头切换按钮 ---------- */
+.workstation__camera-toggle {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  line-height: 1;
+}
+
+.workstation__camera-toggle:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.workstation__camera-toggle:active {
+  transform: scale(0.95);
+}
+
+/* ---------- 情绪指示器 ---------- */
+.workstation__emotion-indicator {
+  font-size: 24px;
+  line-height: 1;
+  animation: emotionFadeIn 0.3s ease;
+  cursor: default;
+}
+
+@keyframes emotionFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ---------- 底部操作栏 ---------- */
+.workstation__action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+/* ---------- 语音识别按钮 ---------- */
+.workstation__voice-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  background: #fff;
+  color: #555;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  position: relative;
+}
+
+.workstation__voice-btn:hover {
+  background: #f5f5f5;
+  border-color: #bbb;
+}
+
+.workstation__voice-btn--listening {
+  border-color: #e74c3c;
+  color: #e74c3c;
+  background: rgba(231, 76, 60, 0.05);
+}
+
+.workstation__voice-btn-pulse {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.workstation__voice-btn-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid #e74c3c;
+  animation: voicePulseRing 1s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes voicePulseRing {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.workstation__voice-btn-label {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ---------- 更多菜单（移动端） ---------- */
+.workstation__more-menu-wrapper {
+  position: relative;
+  display: none; /* 桌面端隐藏 */
+}
+
+.workstation__more-btn {
+  padding: 6px 14px;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  background: #fff;
+  color: #888;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.workstation__more-btn:hover {
+  background: #f5f5f5;
+  border-color: #bbb;
+  color: #555;
+}
+
+.workstation__more-menu {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  z-index: 20;
+  animation: moreMenuSlideIn 0.2s ease;
+  min-width: 140px;
+}
+
+@keyframes moreMenuSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- 准备倒计时 ---------- */
+.workstation__countdown {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f0f7f0 0%, #fff8f0 100%);
+  z-index: 10;
+  animation: countdownFadeIn 0.5s ease;
+}
+
+@keyframes countdownFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.workstation__countdown-text {
+  font-size: 24px;
+  color: #555;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.workstation__countdown-number {
+  font-size: 96px;
+  font-weight: 800;
+  color: #2980b9;
+  animation: countdownPulse 1s ease-in-out infinite;
+}
+
+@keyframes countdownPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+.workstation__countdown-task {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-top: 24px;
+}
+
+/* ========================================
+   庆祝页面样式 - TaskComplete
+   ======================================== */
+
+.task-complete {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f0f7f0 0%, #fff8f0 100%);
+  position: relative;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+}
+
+/* 五彩纸屑容器 */
+.task-complete__confetti-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* 单个纸屑 */
+.task-complete__confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: -10px;
+  animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* 庆祝内容 */
+.task-complete__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: celebrateBounceIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes celebrateBounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 大号庆祝emoji */
+.task-complete__emoji {
+  font-size: 120px;
+  line-height: 1;
+  margin-bottom: 24px;
+  animation: celebrateEmoji 2s ease-in-out infinite;
+}
+
+@keyframes celebrateEmoji {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.1) rotate(-5deg);
+  }
+  75% {
+    transform: scale(1.1) rotate(5deg);
+  }
+}
+
+/* 庆祝标题 */
+.task-complete__title {
+  font-size: 56px;
+  font-weight: 800;
+  color: #1a1a2e;
+  margin-bottom: 16px;
+  letter-spacing: 4px;
+}
+
+/* 任务名称 */
+.task-complete__task-name {
+  font-size: 28px;
+  color: #555;
+  margin-bottom: 32px;
+  font-weight: 500;
+}
+
+/* 用时统计 */
+.task-complete__stats {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 40px;
+}
+
+.task-complete__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.task-complete__stat-value {
+  font-size: 36px;
+  font-weight: 700;
+  color: #2980b9;
+}
+
+.task-complete__stat-label {
+  font-size: 16px;
+  color: #888;
+}
+
+/* 星星评级 */
+.task-complete__stars {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.task-complete__star {
+  font-size: 48px;
+  color: #ddd;
+  animation: starPop 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  opacity: 0;
+  transform: scale(0);
+}
+
+.task-complete__star--active {
+  color: #f1c40f;
+  filter: drop-shadow(0 2px 8px rgba(241, 196, 15, 0.5));
+}
+
+@keyframes starPop {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(-180deg);
+  }
+  60% {
+    transform: scale(1.3) rotate(10deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* 倒计时提示 */
+.task-complete__next-hint {
+  font-size: 20px;
+  color: #888;
+  font-weight: 500;
+}
+
+.task-complete__next-countdown {
+  font-size: 24px;
+  color: #2980b9;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+/* ========================================
+   响应式适配
+   ======================================== */
+
+/* 平板适配 (1024x768) */
+@media (max-width: 1024px) {
+  .workstation__step-title {
+    font-size: 40px;
+  }
+
+  .workstation__step-desc {
+    font-size: 24px;
+  }
+
+  .workstation__step-emoji {
+    font-size: 100px;
+  }
+
+  .workstation__speech-bubble {
+    font-size: 20px;
+    padding: 14px 24px;
+  }
+
+  .task-complete__title {
+    font-size: 44px;
+  }
+
+  .task-complete__emoji {
+    font-size: 96px;
+  }
+}
+
+/* 手机适配 (375x667) */
+@media (max-width: 480px) {
+  .workstation__header {
+    padding: 10px 12px 8px;
+  }
+
+  .workstation__header-top {
+    gap: 8px;
+  }
+
+  .workstation__task-name {
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .workstation__step-counter {
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  .workstation__progress-bar {
+    height: 8px;
+  }
+
+  .workstation__main {
+    padding: 12px 16px;
+  }
+
+  .workstation__step-emoji {
+    font-size: 64px;
+    margin-bottom: 12px;
+  }
+
+  .workstation__step-title {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  .workstation__step-desc {
+    font-size: 18px;
+    margin-bottom: 16px;
+    max-width: 100%;
+  }
+
+  .workstation__speech-bubble {
+    font-size: 16px;
+    padding: 10px 16px;
+    max-width: 100%;
+    box-sizing: border-box;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .workstation__ai-status {
+    font-size: 13px;
+    padding: 6px 10px;
+    gap: 8px;
+  }
+
+  .workstation__step-thumb {
+    min-width: 44px;
+    padding: 4px 6px;
+  }
+
+  .workstation__step-thumb-icon {
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 12px !important;
+  }
+
+  .workstation__step-thumb-label {
+    font-size: 9px !important;
+  }
+
+  .workstation__step-connector {
+    width: 10px;
+  }
+
+  .workstation__countdown-number {
+    font-size: 72px;
+  }
+
+  .workstation__countdown-task {
+    font-size: 22px;
+  }
+
+  /* 摄像头切换按钮 - 移动端缩小 */
+  .workstation__camera-toggle {
+    width: 34px;
+    height: 34px;
+    font-size: 16px;
+  }
+
+  /* 情绪指示器 - 移动端缩小 */
+  .workstation__emotion-indicator {
+    font-size: 20px;
+  }
+
+  /* 语音按钮 - 移动端 */
+  .workstation__voice-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .workstation__voice-btn-label {
+    font-size: 11px;
+  }
+
+  /* 隐藏桌面端演示按钮，显示移动端更多菜单 */
+  .workstation__demo-buttons {
+    display: none;
+  }
+
+  .workstation__more-menu-wrapper {
+    display: block;
+  }
+
+  /* 操作栏在移动端调整间距 */
+  .workstation__action-bar {
+    gap: 8px;
+  }
+
+  /* 返回按钮 - 移动端缩小 */
+  .workstation__back-btn {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+
+  /* 庆祝页面手机适配 */
+  .task-complete__title {
+    font-size: 36px;
+  }
+
+  .task-complete__emoji {
+    font-size: 80px;
+  }
+
+  .task-complete__task-name {
+    font-size: 22px;
+  }
+
+  .task-complete__stat-value {
+    font-size: 28px;
+  }
+
+  .task-complete__star {
+    font-size: 36px;
+  }
+
+  .task-complete__stats {
+    gap: 20px;
+  }
+
+  .task-complete__next-hint {
+    font-size: 16px;
+  }
+}
+
+/* 短屏幕适配（横屏手机等） */
+@media (max-height: 500px) {
+  .workstation__step-emoji {
+    font-size: 60px;
+    margin-bottom: 8px;
+  }
+
+  .workstation__step-title {
+    font-size: 28px;
+    margin-bottom: 6px;
+  }
+
+  .workstation__step-desc {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  .workstation__speech-bubble {
+    font-size: 16px;
+    padding: 8px 16px;
+  }
+
+  .workstation__main {
+    padding: 8px 16px;
+  }
+}
+
+/* 返回首页按钮 */
+.workstation__back-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(4px);
+  flex-shrink: 0;
+}
+
+.workstation__back-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* 任务完成页操作按钮 */
+.task-complete__actions {
+  margin-top: 24px;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.task-complete__btn {
+  padding: 12px 32px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.task-complete__btn--home {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+}
+
+.task-complete__btn--home:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}

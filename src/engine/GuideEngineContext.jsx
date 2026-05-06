@@ -59,6 +59,7 @@ export function GuideEngineProvider({ children, template, employeeId = 'emp_001'
 
   /**
    * 处理视觉检测结果（手势 + 情绪）
+   * 注意：此函数使用 engineRef.current 直接调用引擎方法，避免循环依赖
    * @param {Object} result - 视觉检测结果
    * @param {string} [result.gesture] - 检测到的手势（如 'thumbs_up', 'open_palm'）
    * @param {string} [result.emotion] - 检测到的情绪（如 'happy', 'confused', 'frustrated'）
@@ -66,11 +67,22 @@ export function GuideEngineProvider({ children, template, employeeId = 'emp_001'
   const handleVisionResult = useCallback((result) => {
     if (!result) return;
 
-    // 处理手势
+    // 处理手势 - 直接使用引擎引用，不依赖外部函数
     if (result.gesture === 'thumbs_up') {
-      simulateStepComplete();
+      if (engineRef.current) {
+        engineRef.current.simulateStepComplete();
+        // 延迟同步状态（等鼓励动画播放完）
+        setTimeout(() => {
+          if (engineRef.current) {
+            setEngineState(engineRef.current.getState());
+          }
+        }, 2500);
+      }
     } else if (result.gesture === 'open_palm') {
-      requestHelp();
+      if (engineRef.current) {
+        engineRef.current.requestHelp();
+        setEngineState(engineRef.current.getState());
+      }
     }
 
     // 处理情绪变化
@@ -93,21 +105,33 @@ export function GuideEngineProvider({ children, template, employeeId = 'emp_001'
 
   /**
    * 处理语音识别结果（ASR 文本）
+   * 注意：此函数使用 engineRef.current 直接调用引擎方法，避免循环依赖
    * @param {string} text - 语音识别文本
    */
   const handleVoiceResult = useCallback((text) => {
     if (!text) return;
     const normalized = text.toLowerCase().trim();
 
-    // 检测完成关键词
+    // 检测完成关键词 - 直接使用引擎引用
     if (COMPLETION_KEYWORDS.some((kw) => normalized.includes(kw.toLowerCase()))) {
-      simulateStepComplete();
+      if (engineRef.current) {
+        engineRef.current.simulateStepComplete();
+        // 延迟同步状态（等鼓励动画播放完）
+        setTimeout(() => {
+          if (engineRef.current) {
+            setEngineState(engineRef.current.getState());
+          }
+        }, 2500);
+      }
       return;
     }
 
-    // 检测求助关键词
+    // 检测求助关键词 - 直接使用引擎引用
     if (HELP_KEYWORDS.some((kw) => normalized.includes(kw.toLowerCase()))) {
-      requestHelp();
+      if (engineRef.current) {
+        engineRef.current.requestHelp();
+        setEngineState(engineRef.current.getState());
+      }
       return;
     }
   }, []);

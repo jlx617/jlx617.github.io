@@ -832,7 +832,7 @@
     <header class="topbar">
       <div class="topline">
         <button class="page-back" type="button" onclick="handleTopBack()" aria-label="返回">‹</button>
-        <div class="page-name" id="pageTitle">人员智能管控</div>
+        <div class="page-name" id="pageTitle">临时人员管控</div>
       </div>
     </header>
 
@@ -840,7 +840,7 @@
       <section class="page active" id="page-dashboard">
         <button class="org-card" type="button" onclick="openOrgSheet()">
           <span class="org-title">
-            <strong id="orgCardName">三峡建工华南分公司</strong>
+            <strong id="orgCardName">总承包湖北分公司</strong>
           </span>
           <span class="icon-btn" aria-hidden="true">⌄</span>
         </button>
@@ -915,7 +915,7 @@
     <nav class="bottom-nav" aria-label="底部导航">
       <button class="nav-item active" type="button" data-nav="dashboard" onclick="switchPage('dashboard')"><span>⌂</span>工作台</button>
       <button class="nav-item" type="button" data-nav="events" onclick="switchPage('events')"><span>!</span>人员管控</button>
-      <button class="nav-item" type="button" data-nav="people" onclick="switchPage('people')"><span>≡</span>入场人员</button>
+      <button class="nav-item" type="button" data-nav="people" onclick="switchPage('people')"><span>≡</span>近期入场</button>
     </nav>
 
     <div class="sheet-backdrop" id="orgSheet" onclick="closeOrgSheet(event)">
@@ -939,29 +939,30 @@
 
   <script>
     const orgs = [
-      { id: "company", mark: "司", name: "三峡建工华南分公司", scope: "company" },
-      { id: "p1", mark: "A", name: "三峡智慧工地 A 标段", scope: "project" },
-      { id: "p2", mark: "城", name: "城市更新综合体项目", scope: "project" },
-      { id: "p3", mark: "基", name: "深基坑支护工程", scope: "project" }
+      { id: "company", mark: "司", name: "总承包湖北分公司", scope: "company" },
+      { id: "p1", mark: "A", name: "三峡科研基地基坑项目", scope: "project" },
+      { id: "p2", mark: "城", name: "施工项目A", scope: "project" },
+      { id: "p3", mark: "基", name: "施工项目B", scope: "project" },
+      { id: "p4", mark: "C", name: "施工项目C", scope: "project" }
     ];
 
     let events = [
-      { id: "E20260701001", projectId: "p1", project: "三峡智慧工地 A 标段", gate: "南门 1 号闸机", status: "overdue", tag: "", captureCount: 6, rawCount: 38, first: "14:15", last: "14:27", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:27:10", confidence: "91%", pushed: true, note: "", variant: "warn", photos: ["assets/capture-01.png", "assets/capture-02.png", "assets/capture-03.png", "assets/capture-04.png", "assets/capture-05.png", "assets/capture-06.png"], photoTimes: ["14:27:10", "14:21:14", "14:20:17", "14:15:17", "14:16:43", "14:16:55"], material: [] },
-      { id: "E20260701002", projectId: "p2", project: "城市更新综合体项目", gate: "生活区入口", status: "overdue", tag: "", captureCount: 6, rawCount: 24, first: "14:15", last: "14:27", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:21:14", confidence: "88%", pushed: true, note: "", variant: "alt", photos: ["assets/capture-02.png", "assets/capture-04.png", "assets/capture-06.png"], photoTimes: ["14:21:14", "14:15:17", "14:16:55"], material: [] },
-      { id: "E20260701003", projectId: "p1", project: "三峡智慧工地 A 标段", gate: "材料门", status: "pending", tag: "", captureCount: 6, rawCount: 17, first: "14:20", last: "14:27", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:20:17", confidence: "94%", pushed: false, note: "", variant: "", photos: ["assets/capture-03.png", "assets/capture-01.png"], photoTimes: ["14:20:17", "14:27:10"], material: [] },
-      { id: "E20260701004", projectId: "p3", project: "深基坑支护工程", gate: "2 号门", status: "pending", tag: "", captureCount: 4, rawCount: 11, first: "14:15", last: "14:16", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:16:55", confidence: "86%", pushed: false, note: "", variant: "alt", photos: ["assets/capture-06.png", "assets/capture-05.png"], photoTimes: ["14:16:55", "14:16:43"], material: [] },
-      { id: "E20260701005", projectId: "p1", project: "三峡智慧工地 A 标段", gate: "东门", status: "done", tag: "监理入场", captureCount: 5, rawCount: 16, first: "14:16", last: "14:27", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:16:43", confidence: "93%", pushed: false, note: "监理王工临时入场检查，已由项目安全员核实。", variant: "", photos: ["assets/capture-05.png", "assets/capture-01.png"], photoTimes: ["14:16:43", "14:27:10"], processedBy: "刘敏", processedAt: "2026-07-01 14:38:20", material: [] },
-      { id: "E20260701006", projectId: "p2", project: "城市更新综合体项目", gate: "主入口", status: "done", tag: "未登记劳务人员", captureCount: 8, rawCount: 20, first: "14:15", last: "14:21", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:15:17", confidence: "90%", pushed: false, note: "已补录花名册并完成入场安全告知。", variant: "warn", photos: ["assets/capture-04.png", "assets/capture-02.png"], photoTimes: ["14:15:17", "14:21:14"], processedBy: "周磊", processedAt: "2026-07-01 14:45:12", material: ["安全教育签到表.jpg", "入场告知书.pdf"] }
+      { id: "E20260701001", projectId: "p1", project: "三峡科研基地基坑项目", gate: "南门 1 号闸机", status: "overdue", tag: "", captureCount: 6, rawCount: 38, first: "14:15", last: "14:27", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:27:10", confidence: "91%", pushed: true, note: "", variant: "warn", photos: ["assets/capture-01.png", "assets/capture-02.png", "assets/capture-03.png", "assets/capture-04.png", "assets/capture-05.png", "assets/capture-06.png"], photoTimes: ["14:27:10", "14:21:14", "14:20:17", "14:15:17", "14:16:43", "14:16:55"], material: [] },
+      { id: "E20260701002", projectId: "p2", project: "施工项目A", gate: "生活区入口", status: "overdue", tag: "", captureCount: 6, rawCount: 24, first: "14:15", last: "14:27", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:21:14", confidence: "88%", pushed: true, note: "", variant: "alt", photos: ["assets/capture-02.png", "assets/capture-04.png", "assets/capture-06.png"], photoTimes: ["14:21:14", "14:15:17", "14:16:55"], material: [] },
+      { id: "E20260701003", projectId: "p1", project: "三峡科研基地基坑项目", gate: "材料门", status: "pending", tag: "", captureCount: 6, rawCount: 17, first: "14:20", last: "14:27", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:20:17", confidence: "94%", pushed: false, note: "", variant: "", photos: ["assets/capture-03.png", "assets/capture-01.png"], photoTimes: ["14:20:17", "14:27:10"], material: [] },
+      { id: "E20260701004", projectId: "p3", project: "施工项目B", gate: "2 号门", status: "pending", tag: "", captureCount: 4, rawCount: 11, first: "14:15", last: "14:16", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:16:55", confidence: "86%", pushed: false, note: "", variant: "alt", photos: ["assets/capture-06.png", "assets/capture-05.png"], photoTimes: ["14:16:55", "14:16:43"], material: [] },
+      { id: "E20260701005", projectId: "p1", project: "三峡科研基地基坑项目", gate: "东门", status: "done", tag: "监理入场", captureCount: 5, rawCount: 16, first: "14:16", last: "14:27", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:16:43", confidence: "93%", pushed: false, note: "监理王工临时入场检查，已由项目安全员核实。", variant: "", photos: ["assets/capture-05.png", "assets/capture-01.png"], photoTimes: ["14:16:43", "14:27:10"], processedBy: "刘敏", processedAt: "2026-07-01 14:38:20", material: [] },
+      { id: "E20260701006", projectId: "p2", project: "施工项目A", gate: "主入口", status: "done", tag: "未登记劳务人员", captureCount: 8, rawCount: 20, first: "14:15", last: "14:21", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:15:17", confidence: "90%", pushed: false, note: "已补录花名册并完成入场安全告知。", variant: "warn", photos: ["assets/capture-04.png", "assets/capture-02.png"], photoTimes: ["14:15:17", "14:21:14"], processedBy: "周磊", processedAt: "2026-07-01 14:45:12", material: ["安全教育签到表.jpg", "入场告知书.pdf"] }
     ];
 
     const people = [
-      { id: "P001", name: "李建国", trade: "钢筋工", role: "建筑工人", team: "钢筋一班", company: "华南劳务一公司", projectId: "p1", project: "三峡智慧工地 A 标段", entryDate: "2026-07-16", phone: "138****1234", idNo: "420106198401121234", nation: "汉族", gender: "男", age: 42 },
-      { id: "P002", name: "王秋英", trade: "木工", role: "建筑工人", team: "木工二班", company: "广建装饰劳务", projectId: "p1", project: "三峡智慧工地 A 标段", entryDate: "2026-07-16", phone: "139****5678", idNo: "430102198802185678", nation: "汉族", gender: "女", age: 38 },
-      { id: "P003", name: "张伟", trade: "架子工", role: "建筑工人", team: "架子一班", company: "深安脚手架工程队", projectId: "p2", project: "城市更新综合体项目", entryDate: "2026-07-15", phone: "137****9012", idNo: "440305199103219012", nation: "汉族", gender: "男", age: 35 },
-      { id: "P004", name: "陈静", trade: "电工", role: "建筑工人", team: "机电安装班", company: "华电安装分包", projectId: "p2", project: "城市更新综合体项目", entryDate: "2026-07-17", phone: "136****8877", idNo: "510104199506108877", nation: "汉族", gender: "女", age: 31 },
-      { id: "P005", name: "赵强", trade: "钢筋工", role: "建筑工人", team: "钢筋三班", company: "华南劳务二公司", projectId: "p3", project: "深基坑支护工程", entryDate: "2026-07-18", phone: "135****2233", idNo: "421002198003112233", nation: "汉族", gender: "男", age: 46 },
-      { id: "P006", name: "刘敏", trade: "安全员", role: "管理人员", team: "项目安全组", company: "项目总包单位", projectId: "p1", project: "三峡智慧工地 A 标段", entryDate: "2026-07-12", phone: "132****6655", idNo: "330106199709126655", nation: "汉族", gender: "女", age: 29 },
-      { id: "P007", name: "周磊", trade: "施工员", role: "管理人员", team: "生产管理组", company: "项目总包单位", projectId: "p2", project: "城市更新综合体项目", entryDate: "2026-07-16", phone: "131****7788", idNo: "340102199303237788", nation: "汉族", gender: "男", age: 33 }
+      { id: "P001", name: "李建国", trade: "钢筋工", role: "建筑工人", team: "钢筋一班", company: "华南劳务一公司", projectId: "p1", project: "三峡科研基地基坑项目", entryDate: "2026-07-16", phone: "138****1234", idNo: "420106198401121234", nation: "汉族", gender: "男", age: 42 },
+      { id: "P002", name: "王秋英", trade: "木工", role: "建筑工人", team: "木工二班", company: "广建装饰劳务", projectId: "p1", project: "三峡科研基地基坑项目", entryDate: "2026-07-16", phone: "139****5678", idNo: "430102198802185678", nation: "汉族", gender: "女", age: 38 },
+      { id: "P003", name: "张伟", trade: "架子工", role: "建筑工人", team: "架子一班", company: "深安脚手架工程队", projectId: "p2", project: "施工项目A", entryDate: "2026-07-15", phone: "137****9012", idNo: "440305199103219012", nation: "汉族", gender: "男", age: 35 },
+      { id: "P004", name: "陈静", trade: "电工", role: "建筑工人", team: "机电安装班", company: "华电安装分包", projectId: "p2", project: "施工项目A", entryDate: "2026-07-17", phone: "136****8877", idNo: "510104199506108877", nation: "汉族", gender: "女", age: 31 },
+      { id: "P005", name: "赵强", trade: "钢筋工", role: "建筑工人", team: "钢筋三班", company: "华南劳务二公司", projectId: "p3", project: "施工项目B", entryDate: "2026-07-18", phone: "135****2233", idNo: "421002198003112233", nation: "汉族", gender: "男", age: 46 },
+      { id: "P006", name: "刘敏", trade: "安全员", role: "管理人员", team: "项目安全组", company: "项目总包单位", projectId: "p1", project: "三峡科研基地基坑项目", entryDate: "2026-07-12", phone: "132****6655", idNo: "330106199709126655", nation: "汉族", gender: "女", age: 29 },
+      { id: "P007", name: "周磊", trade: "施工员", role: "管理人员", team: "生产管理组", company: "项目总包单位", projectId: "p2", project: "施工项目A", entryDate: "2026-07-16", phone: "131****7788", idNo: "340102199303237788", nation: "汉族", gender: "男", age: 33 }
     ];
 
     const chart = [
@@ -1155,7 +1156,7 @@
     }
 
     function updatePageTitle(page) {
-      document.getElementById("pageTitle").textContent = "人员智能管控";
+      document.getElementById("pageTitle").textContent = "临时人员管控";
     }
 
     function handleTopBack() {
@@ -1441,3 +1442,4 @@
   </script>
 </body>
 </html>
+

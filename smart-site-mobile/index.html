@@ -1,0 +1,1443 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <title>智慧工地人员安全管控移动端</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --text: #172033;
+      --muted: #667085;
+      --subtle: #98a2b3;
+      --line: #e5e9f0;
+      --blue: #2364e8;
+      --blue-2: #eaf1ff;
+      --green: #0f9f6e;
+      --green-2: #e8f8f1;
+      --amber: #d88900;
+      --amber-2: #fff4dc;
+      --red: #df3b3b;
+      --red-2: #fff0f0;
+      --cyan: #168aad;
+      --cyan-2: #e8f7fb;
+      --nav: #101828;
+      --radius: 8px;
+      --shadow: 0 10px 28px rgba(16, 24, 40, .08);
+      color-scheme: light;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: #e9edf5; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      color: var(--text);
+      letter-spacing: 0;
+    }
+
+    button, input, textarea { font: inherit; }
+    button { border: 0; background: none; color: inherit; cursor: pointer; }
+    .shell {
+      width: 100%;
+      max-width: 430px;
+      min-height: 100vh;
+      margin: 0;
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 0 1px rgba(16, 24, 40, .05);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 255, 255, .96);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+      padding: calc(10px + env(safe-area-inset-top)) 16px 10px;
+    }
+    .topline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 40px;
+      position: relative;
+    }
+    .page-back {
+      position: absolute;
+      left: 0;
+      top: 2px;
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius);
+      display: grid;
+      place-items: center;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 700;
+    }
+    .page-name {
+      width: 100%;
+      padding: 0 44px;
+      font-size: 17px;
+      line-height: 24px;
+      font-weight: 800;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .org-btn {
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-align: left;
+    }
+    .org-title { min-width: 0; }
+    .org-title strong {
+      display: block;
+      max-width: 315px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 15px;
+      line-height: 20px;
+    }
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius);
+      display: grid;
+      place-items: center;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .org-card {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-align: left;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 9px 10px;
+      margin-bottom: 10px;
+      box-shadow: 0 5px 18px rgba(16, 24, 40, .04);
+    }
+    .org-card .icon-btn {
+      flex: none;
+      margin-left: auto;
+      width: 28px;
+      height: 28px;
+      font-size: 14px;
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .content {
+      height: calc(100vh - 61px);
+      overflow: auto;
+      padding: 14px 12px calc(86px + env(safe-area-inset-bottom));
+      scroll-behavior: smooth;
+    }
+    .page { display: none; }
+    .page.active { display: block; animation: fade .18s ease-out; }
+    @keyframes fade { from { opacity: .35; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 16px 2px 10px;
+    }
+    .section-title > div { min-width: 0; }
+    .section-title h2 { margin: 0; font-size: 16px; line-height: 22px; }
+    .link-btn { flex: none; color: var(--blue); font-weight: 700; font-size: 13px; white-space: nowrap; }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: currentColor;
+      flex: none;
+      margin-top: 6px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px;
+    }
+    .metric {
+      display: block;
+      width: 100%;
+      text-align: left;
+      min-height: 78px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 9px 7px;
+      box-shadow: 0 5px 18px rgba(16, 24, 40, .04);
+    }
+    .metric:active { transform: translateY(1px); }
+    .metric .label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 15px;
+    }
+    .metric .value {
+      margin-top: 9px;
+      font-size: 22px;
+      line-height: 26px;
+      font-weight: 800;
+    }
+    .tone-blue { color: var(--blue); }
+    .tone-amber { color: var(--amber); }
+    .tone-red { color: var(--red); }
+    .tone-green { color: var(--green); }
+    .tone-cyan { color: var(--cyan); }
+
+    .tabs, .filter-row {
+      display: flex;
+      gap: 8px;
+      overflow: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar, .filter-row::-webkit-scrollbar { display: none; }
+    .chip {
+      flex: none;
+      min-height: 34px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      color: var(--muted);
+      background: #eef2f7;
+      font-size: 13px;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+    .chip.active {
+      color: #fff;
+      background: var(--blue);
+      border-color: var(--blue);
+    }
+    .people-control-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .people-control-row .filter-row {
+      flex: 1;
+      justify-content: flex-end;
+      padding-bottom: 0;
+    }
+    .people-control-row .chip {
+      min-height: 30px;
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+    .date-filter {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .date-field {
+      display: grid;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 16px;
+    }
+    .date-field input {
+      width: 100%;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      padding: 0 8px;
+      outline: none;
+      font-size: 12px;
+    }
+    .date-field input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(35, 100, 232, .12); }
+
+    .card-list { display: grid; gap: 10px; }
+    #peopleList { margin-top: 14px; }
+    .event-card, .person-card {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      box-shadow: 0 5px 18px rgba(16, 24, 40, .04);
+    }
+    .event-head, .person-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .event-title { min-width: 0; }
+    .event-title strong, .person-info strong {
+      display: block;
+      font-size: 15px;
+      line-height: 22px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .event-title span, .person-info span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 18px;
+      margin-top: 2px;
+    }
+    .badge {
+      flex: none;
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .badge.pending { background: var(--blue-2); color: var(--blue); }
+    .badge.overdue { background: var(--red-2); color: var(--red); }
+    .badge.done { background: var(--green-2); color: var(--green); }
+    .badge.neutral { background: #eef2f7; color: var(--muted); }
+    .badge.cyan { background: var(--cyan-2); color: var(--cyan); }
+
+    .event-body {
+      display: grid;
+      grid-template-columns: 112px 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .capture {
+      height: 76px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: relative;
+      background:
+        radial-gradient(circle at 50% 30%, rgba(255, 228, 196, .9) 0 13px, transparent 14px),
+        radial-gradient(circle at 50% 69%, rgba(42, 54, 71, .9) 0 24px, transparent 25px),
+        linear-gradient(140deg, #dce7f4 0%, #8797aa 100%);
+    }
+    .capture::after {
+      content: "AI";
+      position: absolute;
+      left: 6px;
+      bottom: 6px;
+      padding: 2px 5px;
+      border-radius: 4px;
+      background: rgba(16, 24, 40, .72);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+    }
+    .capture.alt {
+      background:
+        radial-gradient(circle at 50% 30%, rgba(238, 202, 172, .92) 0 13px, transparent 14px),
+        radial-gradient(circle at 50% 69%, rgba(29, 78, 99, .9) 0 24px, transparent 25px),
+        linear-gradient(140deg, #ddece8 0%, #6f8d95 100%);
+    }
+    .capture.warn {
+      background:
+        radial-gradient(circle at 50% 30%, rgba(255, 220, 184, .95) 0 13px, transparent 14px),
+        radial-gradient(circle at 50% 69%, rgba(97, 50, 38, .9) 0 24px, transparent 25px),
+        linear-gradient(140deg, #f7dfc2 0%, #987b64 100%);
+    }
+    .real-capture {
+      width: 100%;
+      height: 86px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #d8dee8;
+      position: relative;
+    }
+    .real-capture img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .event-photo-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .event-photo {
+      height: 64px;
+      border-radius: 7px;
+      overflow: hidden;
+      background: #d8dee8;
+    }
+    .event-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .event-rows {
+      display: grid;
+      gap: 6px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 18px;
+    }
+    .event-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-width: 0;
+    }
+    .event-row strong {
+      color: var(--text);
+      font-size: 13px;
+      line-height: 19px;
+      font-weight: 800;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .event-row span {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .recent-event-card {
+      display: grid;
+      grid-template-columns: 1fr 72px;
+      align-items: center;
+      gap: 10px;
+      min-height: 88px;
+    }
+    .recent-event-info {
+      min-width: 0;
+      display: grid;
+      gap: 5px;
+      font-size: 12px;
+      line-height: 18px;
+      color: var(--muted);
+    }
+    .recent-event-info .event-row { justify-content: flex-start; }
+    .recent-event-info strong {
+      display: block;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 20px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .recent-thumb {
+      width: 72px;
+      height: 64px;
+      border-radius: 7px;
+      overflow: hidden;
+      background: #d8dee8;
+    }
+    .recent-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .search {
+      background: var(--bg);
+      padding-bottom: 10px;
+    }
+    .search input {
+      width: 100%;
+      height: 42px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 0 12px;
+      outline: none;
+      color: var(--text);
+    }
+    .search input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(35, 100, 232, .12); }
+
+    .chart {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      align-items: end;
+      gap: 7px;
+      height: 150px;
+      padding: 28px 12px 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+    .chart-title {
+      position: absolute;
+      top: 9px;
+      left: 12px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 16px;
+      font-weight: 700;
+    }
+    .bar-wrap {
+      min-width: 0;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 5px;
+      height: 100%;
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+      border-radius: 8px;
+      padding: 3px 2px;
+      cursor: pointer;
+    }
+    .bar-wrap.active { background: var(--blue-2); outline: 1px solid rgba(35, 100, 232, .28); }
+    .bar {
+      align-self: end;
+      width: 100%;
+      min-height: 10px;
+      border-radius: 6px 6px 2px 2px;
+      background: linear-gradient(180deg, #2364e8, #168aad);
+    }
+    .bar-num { color: var(--text); font-weight: 800; font-size: 11px; line-height: 16px; }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      flex: none;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 800;
+      background: linear-gradient(135deg, #2364e8, #0f9f6e);
+    }
+    .person-head { align-items: center; }
+    .person-info { min-width: 0; flex: 1; }
+    .person-meta { display: grid; gap: 6px; margin-top: 8px; color: var(--muted); font-size: 12px; line-height: 18px; }
+    .person-meta strong { color: var(--text); font-weight: 700; }
+
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      transform: none;
+      z-index: 24;
+      width: 100%;
+      max-width: 430px;
+      padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
+      background: rgba(255, 255, 255, .98);
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+    }
+    .nav-item {
+      min-width: 0;
+      min-height: 48px;
+      border-radius: var(--radius);
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .nav-item.active { background: var(--blue-2); color: var(--blue); }
+    .nav-item span { display: block; font-size: 18px; line-height: 18px; margin-bottom: 3px; }
+
+    .sheet-backdrop {
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 40;
+      background: rgba(15, 23, 42, .38);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .sheet-backdrop.show { display: flex; }
+    .sheet {
+      width: 100%;
+      max-width: 430px;
+      max-height: 86vh;
+      background: var(--surface);
+      border-radius: 14px 14px 0 0;
+      padding: 14px 14px calc(16px + env(safe-area-inset-bottom));
+      box-shadow: var(--shadow);
+      overflow: auto;
+      animation: sheet .18s ease-out;
+    }
+    @keyframes sheet { from { transform: translateY(30px); } to { transform: none; } }
+    .sheet-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .sheet-head h3 { margin: 0; font-size: 17px; line-height: 24px; }
+    .org-list { display: grid; gap: 8px; }
+    .org-option {
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: var(--surface);
+    }
+    .org-option.project { width: calc(100% - 18px); margin-left: 18px; }
+    .org-option.active { border-color: var(--blue); background: var(--blue-2); }
+    .org-option strong { display: block; font-size: 14px; line-height: 20px; }
+
+    .detail-cover {
+      margin: -14px -12px 0;
+      padding: 14px 12px 12px;
+      background: linear-gradient(180deg, #ffffff 0%, #f5f7fb 100%);
+      border-bottom: 1px solid var(--line);
+    }
+    .back-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 40px;
+      margin-bottom: 8px;
+    }
+    .back-row button {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius);
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      font-size: 24px;
+      line-height: 1;
+    }
+    .detail-title h1 { margin: 0; font-size: 20px; line-height: 28px; }
+    .detail-title p { margin: 4px 0 0; color: var(--muted); font-size: 13px; line-height: 19px; }
+    .detail-section {
+      margin-top: 12px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+    }
+    .detail-section h3 {
+      margin: 0 0 10px;
+      font-size: 15px;
+      line-height: 21px;
+    }
+    .kv {
+      display: grid;
+      gap: 8px;
+    }
+    .kv div {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 19px;
+    }
+    .kv div:last-child { border-bottom: 0; padding-bottom: 0; }
+    .kv strong { color: var(--text); text-align: right; }
+
+    .capture-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .capture-cell .capture, .capture-cell .real-capture { width: 100%; height: 96px; }
+    .capture-cell span { display: block; color: var(--muted); font-size: 11px; margin-top: 5px; text-align: center; }
+    .capture-cell button { display: block; width: 100%; padding: 0; text-align: inherit; }
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .section-head h3 { margin: 0; }
+    .expand-btn {
+      min-height: 30px;
+      padding: 0 10px;
+      border-radius: var(--radius);
+      background: var(--blue-2);
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .tag-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .tag {
+      min-height: 54px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      padding: 9px;
+      text-align: left;
+      font-weight: 800;
+      font-size: 13px;
+    }
+    .tag.active {
+      border-color: var(--blue);
+      background: var(--blue-2);
+      color: var(--blue);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 84px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 10px;
+      outline: none;
+      color: var(--text);
+      background: var(--surface-2);
+    }
+    .upload-box {
+      border: 1px dashed #a6b4ca;
+      border-radius: var(--radius);
+      padding: 12px;
+      background: #fbfcff;
+      display: grid;
+      gap: 8px;
+    }
+    .upload-box strong { font-size: 14px; }
+    .upload-box span { color: var(--muted); font-size: 12px; }
+    .file-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      font-size: 12px;
+    }
+    .primary-btn {
+      width: 100%;
+      min-height: 46px;
+      margin-top: 12px;
+      border-radius: var(--radius);
+      color: #fff;
+      background: var(--nav);
+      font-weight: 800;
+    }
+    .secondary-btn {
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: var(--radius);
+      background: var(--blue-2);
+      color: var(--blue);
+      font-weight: 800;
+      font-size: 13px;
+    }
+    .empty {
+      padding: 34px 16px;
+      text-align: center;
+      color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      font-size: 14px;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(78px + env(safe-area-inset-bottom));
+      transform: translateX(-50%) translateY(20px);
+      z-index: 60;
+      width: min(calc(100vw - 32px), 398px);
+      padding: 12px 14px;
+      background: rgba(16, 24, 40, .94);
+      color: #fff;
+      border-radius: var(--radius);
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transition: .2s ease;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .preview-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 70;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, .78);
+      padding: 22px;
+    }
+    .preview-backdrop.show { display: flex; }
+    .preview-panel {
+      width: min(100%, 430px);
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .preview-panel .capture, .preview-panel .real-capture { width: 100%; height: 360px; }
+    .preview-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; color: var(--muted); font-size: 13px; }
+
+    @media (min-width: 700px) {
+      body { padding: 24px 0; }
+      .shell { min-height: calc(100vh - 48px); border-radius: 22px; margin: 0 auto; }
+      .bottom-nav { left: 50%; transform: translateX(-50%); bottom: 24px; border-radius: 0 0 22px 22px; }
+      .sheet-backdrop { width: 430px; left: 50%; right: auto; transform: translateX(-50%); }
+      .content { height: calc(100vh - 109px); }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell" id="app">
+    <header class="topbar">
+      <div class="topline">
+        <button class="page-back" type="button" onclick="handleTopBack()" aria-label="返回">‹</button>
+        <div class="page-name" id="pageTitle">人员智能管控</div>
+      </div>
+    </header>
+
+    <div class="content" id="content">
+      <section class="page active" id="page-dashboard">
+        <button class="org-card" type="button" onclick="openOrgSheet()">
+          <span class="org-title">
+            <strong id="orgCardName">三峡建工华南分公司</strong>
+          </span>
+          <span class="icon-btn" aria-hidden="true">⌄</span>
+        </button>
+
+        <div class="metric-grid">
+          <button class="metric" type="button" onclick="openEventMetric('all', true)">
+            <div class="label">今日事件</div>
+            <div class="value">18</div>
+          </button>
+          <button class="metric" type="button" onclick="openEventMetric('pending')">
+            <div class="label">待处理事件</div>
+            <div class="value tone-amber">7</div>
+          </button>
+          <button class="metric" type="button" onclick="openEventMetric('overdue')">
+            <div class="label">超时事件</div>
+            <div class="value tone-red">2</div>
+          </button>
+          <button class="metric" type="button" onclick="openPeopleMetric()">
+            <div class="label">近七天入场</div>
+            <div class="value tone-green">386</div>
+          </button>
+        </div>
+
+        <div class="section-title">
+          <div>
+            <h2>最近事件</h2>
+          </div>
+          <button class="link-btn" type="button" onclick="openEventMetric('all', false)">查看全部</button>
+        </div>
+        <div class="card-list" id="priorityList"></div>
+
+      </section>
+
+      <section class="page" id="page-people">
+        <div class="search">
+          <input id="peopleSearch" type="search" placeholder="搜索姓名、身份证号" oninput="renderPeople()">
+        </div>
+        <div class="people-control-row">
+          <span class="badge cyan" id="peopleCount">总人数：234人</span>
+          <div class="filter-row">
+            <button class="chip active" type="button" data-trade="all" onclick="setTrade('all')">全部</button>
+            <button class="chip" type="button" data-trade="建筑工人" onclick="setTrade('建筑工人')">建筑工人</button>
+            <button class="chip" type="button" data-trade="管理人员" onclick="setTrade('管理人员')">管理人员</button>
+          </div>
+        </div>
+        <div class="chart" id="peopleChart"></div>
+        <div class="card-list" id="peopleList"></div>
+      </section>
+
+      <section class="page" id="page-events">
+        <div class="date-filter">
+          <label class="date-field">开始时间
+            <input id="eventDateStart" type="date" value="2026-07-01" onchange="setDateRange()">
+          </label>
+          <label class="date-field">结束时间
+            <input id="eventDateEnd" type="date" value="2026-07-01" onchange="setDateRange()">
+          </label>
+        </div>
+        <div class="tabs" style="margin-bottom:12px">
+          <button class="chip active" type="button" data-event-filter="all" onclick="setEventFilter('all')">全部</button>
+          <button class="chip" type="button" data-event-filter="pending" onclick="setEventFilter('pending')">待处理</button>
+          <button class="chip" type="button" data-event-filter="overdue" onclick="setEventFilter('overdue')">超时</button>
+          <button class="chip" type="button" data-event-filter="done" onclick="setEventFilter('done')">已处理</button>
+        </div>
+        <div class="card-list" id="eventList"></div>
+      </section>
+
+      <section class="page" id="page-event-detail"></section>
+      <section class="page" id="page-person-detail"></section>
+    </div>
+
+    <nav class="bottom-nav" aria-label="底部导航">
+      <button class="nav-item active" type="button" data-nav="dashboard" onclick="switchPage('dashboard')"><span>⌂</span>工作台</button>
+      <button class="nav-item" type="button" data-nav="events" onclick="switchPage('events')"><span>!</span>人员管控</button>
+      <button class="nav-item" type="button" data-nav="people" onclick="switchPage('people')"><span>≡</span>入场人员</button>
+    </nav>
+
+    <div class="sheet-backdrop" id="orgSheet" onclick="closeOrgSheet(event)">
+      <aside class="sheet" onclick="event.stopPropagation()">
+        <div class="sheet-head">
+          <div>
+            <h3>切换组织</h3>
+          </div>
+          <button class="icon-btn" type="button" onclick="closeOrgSheet()">×</button>
+        </div>
+        <div class="org-list" id="orgList"></div>
+      </aside>
+    </div>
+
+    <div class="preview-backdrop" id="previewBackdrop" onclick="closeCapturePreview(event)">
+      <div class="preview-panel" id="previewContent" onclick="event.stopPropagation()"></div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+  </main>
+
+  <script>
+    const orgs = [
+      { id: "company", mark: "司", name: "三峡建工华南分公司", scope: "company" },
+      { id: "p1", mark: "A", name: "三峡智慧工地 A 标段", scope: "project" },
+      { id: "p2", mark: "城", name: "城市更新综合体项目", scope: "project" },
+      { id: "p3", mark: "基", name: "深基坑支护工程", scope: "project" }
+    ];
+
+    let events = [
+      { id: "E20260701001", projectId: "p1", project: "三峡智慧工地 A 标段", gate: "南门 1 号闸机", status: "overdue", tag: "", captureCount: 6, rawCount: 38, first: "14:15", last: "14:27", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:27:10", confidence: "91%", pushed: true, note: "", variant: "warn", photos: ["assets/capture-01.png", "assets/capture-02.png", "assets/capture-03.png", "assets/capture-04.png", "assets/capture-05.png", "assets/capture-06.png"], photoTimes: ["14:27:10", "14:21:14", "14:20:17", "14:15:17", "14:16:43", "14:16:55"], material: [] },
+      { id: "E20260701002", projectId: "p2", project: "城市更新综合体项目", gate: "生活区入口", status: "overdue", tag: "", captureCount: 6, rawCount: 24, first: "14:15", last: "14:27", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:21:14", confidence: "88%", pushed: true, note: "", variant: "alt", photos: ["assets/capture-02.png", "assets/capture-04.png", "assets/capture-06.png"], photoTimes: ["14:21:14", "14:15:17", "14:16:55"], material: [] },
+      { id: "E20260701003", projectId: "p1", project: "三峡智慧工地 A 标段", gate: "材料门", status: "pending", tag: "", captureCount: 6, rawCount: 17, first: "14:20", last: "14:27", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:20:17", confidence: "94%", pushed: false, note: "", variant: "", photos: ["assets/capture-03.png", "assets/capture-01.png"], photoTimes: ["14:20:17", "14:27:10"], material: [] },
+      { id: "E20260701004", projectId: "p3", project: "深基坑支护工程", gate: "2 号门", status: "pending", tag: "", captureCount: 4, rawCount: 11, first: "14:15", last: "14:16", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:16:55", confidence: "86%", pushed: false, note: "", variant: "alt", photos: ["assets/capture-06.png", "assets/capture-05.png"], photoTimes: ["14:16:55", "14:16:43"], material: [] },
+      { id: "E20260701005", projectId: "p1", project: "三峡智慧工地 A 标段", gate: "东门", status: "done", tag: "监理入场", captureCount: 5, rawCount: 16, first: "14:16", last: "14:27", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:16:43", confidence: "93%", pushed: false, note: "监理王工临时入场检查，已由项目安全员核实。", variant: "", photos: ["assets/capture-05.png", "assets/capture-01.png"], photoTimes: ["14:16:43", "14:27:10"], processedBy: "刘敏", processedAt: "2026-07-01 14:38:20", material: [] },
+      { id: "E20260701006", projectId: "p2", project: "城市更新综合体项目", gate: "主入口", status: "done", tag: "未登记劳务人员", captureCount: 8, rawCount: 20, first: "14:15", last: "14:21", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:15:17", confidence: "90%", pushed: false, note: "已补录花名册并完成入场安全告知。", variant: "warn", photos: ["assets/capture-04.png", "assets/capture-02.png"], photoTimes: ["14:15:17", "14:21:14"], processedBy: "周磊", processedAt: "2026-07-01 14:45:12", material: ["安全教育签到表.jpg", "入场告知书.pdf"] }
+    ];
+
+    const people = [
+      { id: "P001", name: "李建国", trade: "钢筋工", role: "建筑工人", team: "钢筋一班", company: "华南劳务一公司", projectId: "p1", project: "三峡智慧工地 A 标段", entryDate: "2026-07-16", phone: "138****1234", idNo: "420106198401121234", nation: "汉族", gender: "男", age: 42 },
+      { id: "P002", name: "王秋英", trade: "木工", role: "建筑工人", team: "木工二班", company: "广建装饰劳务", projectId: "p1", project: "三峡智慧工地 A 标段", entryDate: "2026-07-16", phone: "139****5678", idNo: "430102198802185678", nation: "汉族", gender: "女", age: 38 },
+      { id: "P003", name: "张伟", trade: "架子工", role: "建筑工人", team: "架子一班", company: "深安脚手架工程队", projectId: "p2", project: "城市更新综合体项目", entryDate: "2026-07-15", phone: "137****9012", idNo: "440305199103219012", nation: "汉族", gender: "男", age: 35 },
+      { id: "P004", name: "陈静", trade: "电工", role: "建筑工人", team: "机电安装班", company: "华电安装分包", projectId: "p2", project: "城市更新综合体项目", entryDate: "2026-07-17", phone: "136****8877", idNo: "510104199506108877", nation: "汉族", gender: "女", age: 31 },
+      { id: "P005", name: "赵强", trade: "钢筋工", role: "建筑工人", team: "钢筋三班", company: "华南劳务二公司", projectId: "p3", project: "深基坑支护工程", entryDate: "2026-07-18", phone: "135****2233", idNo: "421002198003112233", nation: "汉族", gender: "男", age: 46 },
+      { id: "P006", name: "刘敏", trade: "安全员", role: "管理人员", team: "项目安全组", company: "项目总包单位", projectId: "p1", project: "三峡智慧工地 A 标段", entryDate: "2026-07-12", phone: "132****6655", idNo: "330106199709126655", nation: "汉族", gender: "女", age: 29 },
+      { id: "P007", name: "周磊", trade: "施工员", role: "管理人员", team: "生产管理组", company: "项目总包单位", projectId: "p2", project: "城市更新综合体项目", entryDate: "2026-07-16", phone: "131****7788", idNo: "340102199303237788", nation: "汉族", gender: "男", age: 33 }
+    ];
+
+    const chart = [
+      { day: "12日", count: 41 },
+      { day: "13日", count: 52 },
+      { day: "14日", count: 47 },
+      { day: "15日", count: 63 },
+      { day: "16日", count: 58 },
+      { day: "17日", count: 71 },
+      { day: "18日", count: 54 }
+    ];
+
+    const eventLabels = {
+      pending: ["待处理", "pending"],
+      overdue: ["已超时", "overdue"],
+      done: ["已处理", "done"]
+    };
+    const tagOptions = [
+      { name: "业主检查" },
+      { name: "监理入场" },
+      { name: "未登记劳务人员" },
+      { name: "设备误报或其他" }
+    ];
+
+    let currentOrg = "company";
+    let eventFilter = "all";
+    let eventDateStart = "2026-07-01";
+    let eventDateEnd = "2026-07-01";
+    let tradeFilter = "all";
+    let selectedEntryDay = "";
+    let selectedEventId = "";
+    let expandedCaptures = {};
+    let currentPage = "dashboard";
+
+    function byScope(items) {
+      const org = orgs.find(o => o.id === currentOrg);
+      if (!org || org.scope === "company") return items;
+      return items.filter(item => item.projectId === currentOrg);
+    }
+
+    function statusBadge(status) {
+      const [label, cls] = eventLabels[status] || eventLabels.pending;
+      return `<span class="badge ${cls}">${label}</span>`;
+    }
+
+    function maskIdNo(idNo) {
+      return idNo.replace(/^(.{6}).+(.{4})$/, "$1********$2");
+    }
+
+    function addMinutes(time, minutes) {
+      const [h, m] = time.split(":").map(Number);
+      const total = h * 60 + m + minutes;
+      return `${String(Math.floor(total / 60)).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}:00`;
+    }
+
+    function formatDateTime(date) {
+      const pad = value => String(value).padStart(2, "0");
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+    }
+
+    function renderEventPhotos(event) {
+      const photos = (event.photos?.length ? event.photos : ["assets/capture-01.png"]).slice(0, 3);
+      return photos.map(src => `
+        <div class="event-photo"><img src="${src}" alt="抓拍图片"></div>
+      `).join("");
+    }
+
+    function renderEventCard(event) {
+      const handledRow = event.status === "done" && event.processedBy && event.processedAt
+        ? `<div class="event-row"><span>处理人：${event.processedBy}</span><strong>${event.processedAt}</strong></div>`
+        : "";
+      return `
+        <button class="event-card" type="button" onclick="openEvent('${event.id}')">
+          <div class="event-photo-strip">
+            ${renderEventPhotos(event)}
+          </div>
+          <div class="event-rows">
+            <div class="event-row"><strong>${event.uploadTime}</strong>${statusBadge(event.status)}</div>
+            <div class="event-row"><span>发生地点：${event.gate}</span></div>
+            <div class="event-row"><span>所属项目：${event.project}</span></div>
+            ${handledRow}
+          </div>
+        </button>
+      `;
+    }
+
+    function renderRecentEventCard(event) {
+      return `
+        <button class="event-card recent-event-card" type="button" onclick="openEvent('${event.id}')">
+          <div class="recent-event-info">
+            <div class="event-row">${statusBadge(event.status)}<span>${event.uploadTime}</span></div>
+            <strong>${event.gate}</strong>
+            <span>${event.project}</span>
+          </div>
+          <div class="recent-thumb"><img src="${event.photos?.[0] || "assets/capture-01.png"}" alt="抓拍图片"></div>
+        </button>
+      `;
+    }
+
+    function renderEvents() {
+      let list = byScope(events);
+      if (eventFilter !== "all") {
+        list = list.filter(event => {
+          if (eventFilter === "overdue") return event.status === "overdue";
+          return event.status === eventFilter;
+        });
+      }
+      if (eventDateStart) list = list.filter(event => event.uploadTime.slice(0, 10) >= eventDateStart);
+      if (eventDateEnd) list = list.filter(event => event.uploadTime.slice(0, 10) <= eventDateEnd);
+      document.querySelectorAll("[data-event-filter]").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.eventFilter === eventFilter);
+      });
+      document.getElementById("eventList").innerHTML = list.length
+        ? list.map(renderEventCard).join("")
+        : `<div class="empty">当前组织下暂无符合条件的临时人员事件。</div>`;
+    }
+
+    function renderPriority() {
+      const list = byScope(events)
+        .filter(event => event.status === "overdue" || event.status === "pending")
+        .slice(0, 3);
+      document.getElementById("priorityList").innerHTML = list.map(renderRecentEventCard).join("");
+    }
+
+    function renderPeople() {
+      const keyword = (document.getElementById("peopleSearch")?.value || "").trim();
+      let list = byScope(people);
+      if (tradeFilter !== "all") list = list.filter(p => p.role === tradeFilter);
+      if (selectedEntryDay) list = list.filter(p => p.entryDate.endsWith(`-${selectedEntryDay.replace("日", "")}`));
+      if (keyword) {
+        list = list.filter(p => [p.name, p.idNo].some(v => v.includes(keyword)));
+      }
+      document.getElementById("peopleCount").textContent = "总人数：234人";
+      document.querySelectorAll("[data-trade]").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.trade === tradeFilter);
+      });
+      document.getElementById("peopleList").innerHTML = list.length
+        ? list.map(p => `
+          <button class="person-card" type="button" onclick="openPerson('${p.id}')">
+            <div class="person-head">
+              <div class="avatar">${p.name.slice(0, 1)}</div>
+              <div class="person-info">
+                <strong>${p.name}</strong>
+                <span>${p.trade || p.role}</span>
+              </div>
+            </div>
+            <div class="person-meta">
+              <div><strong>所属项目：</strong>${p.project}</div>
+              <div><strong>分包单位：</strong>${p.company}</div>
+              <div><strong>身份证号：</strong>${maskIdNo(p.idNo)}</div>
+              <div><strong>入场登记时间：</strong>${p.entryDate}</div>
+            </div>
+          </button>
+        `).join("")
+        : `<div class="empty">未找到近七天入场人员。</div>`;
+    }
+
+    function getChartData() {
+      if (tradeFilter === "建筑工人") {
+        return chart.map(d => ({ ...d, count: Math.max(0, d.count - 8) }));
+      }
+      if (tradeFilter === "管理人员") {
+        return chart.map((d, i) => ({ ...d, count: [6, 8, 7, 9, 10, 11, 8][i] }));
+      }
+      return chart;
+    }
+
+    function renderChart() {
+      const chartData = getChartData();
+      const max = Math.max(...chartData.map(d => d.count));
+      document.getElementById("peopleChart").innerHTML = `
+        <div class="chart-title">近7天入场人数</div>
+        ${chartData.map(d => `
+        <button class="bar-wrap ${selectedEntryDay === d.day ? "active" : ""}" type="button" onclick="setEntryDay('${d.day}')">
+          <div class="bar-num">${d.count}人</div>
+          <div class="bar" style="height:${Math.max(12, Math.round(d.count / max * 78))}px"></div>
+          <div>${d.day}</div>
+        </button>
+      `).join("")}`;
+    }
+
+    function switchPage(page) {
+      currentPage = page;
+      document.querySelectorAll(".page").forEach(el => el.classList.remove("active"));
+      document.getElementById(`page-${page}`).classList.add("active");
+      document.querySelectorAll("[data-nav]").forEach(btn => btn.classList.toggle("active", btn.dataset.nav === page));
+      updatePageTitle(page);
+      if (page === "events") renderEvents();
+      if (page === "people") renderPeople();
+      document.getElementById("content").scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function updatePageTitle(page) {
+      document.getElementById("pageTitle").textContent = "人员智能管控";
+    }
+
+    function handleTopBack() {
+      if (currentPage === "event-detail") {
+        switchPage("events");
+        return;
+      }
+      if (currentPage === "person-detail") {
+        switchPage("people");
+        return;
+      }
+      if (currentPage !== "dashboard") {
+        switchPage("dashboard");
+        return;
+      }
+      showToast("返回宿主 App");
+    }
+
+    function setEventFilter(filter) {
+      eventFilter = filter;
+      switchPage("events");
+      renderEvents();
+    }
+
+    function setDateRange() {
+      eventDateStart = document.getElementById("eventDateStart")?.value || "";
+      eventDateEnd = document.getElementById("eventDateEnd")?.value || "";
+      renderEvents();
+    }
+
+    function openEventMetric(filter, todayOnly = false) {
+      eventFilter = filter;
+      eventDateStart = todayOnly ? "2026-07-01" : "";
+      eventDateEnd = todayOnly ? "2026-07-01" : "";
+      const startInput = document.getElementById("eventDateStart");
+      const endInput = document.getElementById("eventDateEnd");
+      if (startInput) startInput.value = eventDateStart;
+      if (endInput) endInput.value = eventDateEnd;
+      switchPage("events");
+      renderEvents();
+    }
+
+    function openPeopleMetric() {
+      selectedEntryDay = "";
+      tradeFilter = "all";
+      renderChart();
+      switchPage("people");
+    }
+
+    function setTrade(trade) {
+      tradeFilter = trade;
+      renderChart();
+      renderPeople();
+    }
+
+    function setEntryDay(day) {
+      selectedEntryDay = selectedEntryDay === day ? "" : day;
+      renderChart();
+      renderPeople();
+    }
+
+    function openOrgSheet() {
+      document.getElementById("orgList").innerHTML = orgs.map(org => `
+        <button class="org-option ${org.scope === "project" ? "project" : "company"} ${org.id === currentOrg ? "active" : ""}" type="button" onclick="selectOrg('${org.id}')">
+          <strong>${org.name}</strong>
+        </button>
+      `).join("");
+      document.getElementById("orgSheet").classList.add("show");
+    }
+
+    function closeOrgSheet(event) {
+      if (event && event.target.id !== "orgSheet") return;
+      document.getElementById("orgSheet").classList.remove("show");
+    }
+
+    function selectOrg(id) {
+      currentOrg = id;
+      const org = orgs.find(o => o.id === id);
+      document.getElementById("orgCardName").textContent = org.name;
+      document.getElementById("orgSheet").classList.remove("show");
+      renderPriority();
+      renderEvents();
+      renderPeople();
+      showToast(`已切换到：${org.name}`);
+    }
+
+    function openEvent(id) {
+      selectedEventId = id;
+      const event = events.find(e => e.id === id);
+      const isLocked = event.status === "done";
+      currentPage = "event-detail";
+      updatePageTitle("event-detail");
+      document.querySelectorAll(".page").forEach(el => el.classList.remove("active"));
+      document.getElementById("page-event-detail").classList.add("active");
+      document.querySelectorAll("[data-nav]").forEach(btn => btn.classList.remove("active"));
+      renderEventDetail(event, isLocked);
+      document.getElementById("content").scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderEventDetail(event, isLocked) {
+      const selectedTag = event.tag || "";
+      const photos = event.photos || [];
+      const shownCount = expandedCaptures[event.id] ? photos.length : Math.min(9, photos.length);
+      document.getElementById("page-event-detail").innerHTML = `
+        <div class="detail-cover">
+          <div class="back-row">
+            <button type="button" onclick="switchPage('events')">‹</button>
+          </div>
+        </div>
+
+        <section class="detail-section">
+          <h3>事件概况</h3>
+          <div class="kv">
+            <div><span>发生地点</span><strong>${event.gate}</strong></div>
+            <div><span>事件上传时间</span><strong>${event.uploadTime}</strong></div>
+            <div><span>所属项目</span><strong>${event.project}</strong></div>
+            <div><span>事件状态</span><strong>${eventLabels[event.status][0]}</strong></div>
+          </div>
+        </section>
+
+        <section class="detail-section">
+          <div class="section-head">
+            <h3>抓拍证据</h3>
+            ${photos.length > 9 ? `<button class="expand-btn" type="button" onclick="toggleCaptures('${event.id}')">${expandedCaptures[event.id] ? "收起" : `展开全部 ${photos.length} 张`}</button>` : ""}
+          </div>
+          <div class="capture-grid">
+            ${Array.from({ length: shownCount }).map((_, i) => `
+              <div class="capture-cell">
+                <button type="button" onclick="openCapturePreview('${event.id}', ${i})">
+                  <div class="real-capture"><img src="${photos[i]}" alt="抓拍图片 ${i + 1}"></div>
+                  <span>${event.photoTimes?.[i] || addMinutes(event.first, i)}</span>
+                </button>
+              </div>
+            `).join("")}
+          </div>
+        </section>
+
+        <section class="detail-section">
+          <h3>标记原因</h3>
+          <div class="tag-grid">
+            ${tagOptions.map(tag => `
+              <button class="tag ${selectedTag === tag.name ? "active" : ""}" type="button" ${isLocked ? "disabled" : ""} onclick="selectTag('${tag.name}')">
+                ${tag.name}
+              </button>
+            `).join("")}
+          </div>
+        </section>
+
+        <section class="detail-section" id="disposalSection">
+          ${renderDisposal(event)}
+        </section>
+      `;
+    }
+
+    function renderDisposal(event) {
+      const needsMaterial = event.tag === "未登记劳务人员";
+      if (event.status === "done") {
+        return `
+          <h3>处置结果</h3>
+          <div class="kv">
+            <div><span>标记原因</span><strong>${event.tag}</strong></div>
+            <div><span>处理说明</span><strong>${event.note || "已核实并归档"}</strong></div>
+            <div><span>材料附件</span><strong>${event.material.length ? event.material.join("、") : "无需补充"}</strong></div>
+          </div>
+        `;
+      }
+      return `
+        <h3>项目处置</h3>
+        <textarea id="eventNote" placeholder="填写核实情况，例如来访单位、接待人、是否补录花名册等">${event.note || ""}</textarea>
+        <div style="height:10px"></div>
+        <div class="upload-box" style="${needsMaterial ? "" : "display:none"}">
+          <strong>未登记劳务人员需补充材料</strong>
+          <span>建议上传安全教育签到表、入场告知书、人员补录截图等。</span>
+          <div class="file-row"><span>安全教育签到表.jpg</span><span class="tone-green">已选择</span></div>
+          <button class="secondary-btn" type="button" onclick="showToast('原型中已模拟选择附件')">上传材料</button>
+        </div>
+        <button class="primary-btn" type="button" onclick="submitEvent()">提交处置</button>
+      `;
+    }
+
+    function selectTag(tag) {
+      const event = events.find(e => e.id === selectedEventId);
+      event.tag = tag;
+      renderEventDetail(event, false);
+    }
+
+    function toggleCaptures(id) {
+      expandedCaptures[id] = !expandedCaptures[id];
+      const event = events.find(e => e.id === id);
+      renderEventDetail(event, event.status === "done");
+    }
+
+    function openCapturePreview(id, index) {
+      const event = events.find(e => e.id === id);
+      const backdrop = document.getElementById("previewBackdrop");
+      const src = event.photos?.[index] || "assets/capture-01.png";
+      document.getElementById("previewContent").innerHTML = `
+        <div class="real-capture"><img src="${src}" alt="抓拍大图"></div>
+        <div class="preview-meta">
+          <span>${event.gate}</span>
+          <strong>${event.captureDate} ${event.photoTimes?.[index] || addMinutes(event.first, index)}</strong>
+        </div>
+      `;
+      backdrop.classList.add("show");
+    }
+
+    function closeCapturePreview(event) {
+      if (event && event.target.id !== "previewBackdrop") return;
+      document.getElementById("previewBackdrop").classList.remove("show");
+    }
+
+    function submitEvent() {
+      const event = events.find(e => e.id === selectedEventId);
+      if (!event.tag) {
+        showToast("请先选择陌生人识别原因");
+        return;
+      }
+      event.note = document.getElementById("eventNote")?.value || "";
+      event.status = "done";
+      event.processedBy = event.processedBy || "当前项目人员";
+      event.processedAt = event.processedAt || formatDateTime(new Date());
+      if (event.tag === "未登记劳务人员" && event.material.length === 0) {
+        event.material = ["安全教育签到表.jpg", "入场告知书.pdf"];
+      }
+      showToast("已提交处置并归档");
+      renderPriority();
+      renderEvents();
+      openEvent(event.id);
+    }
+
+    function openPerson(id) {
+      const p = people.find(item => item.id === id);
+      if (!p) return;
+      currentPage = "person-detail";
+      updatePageTitle("person-detail");
+      document.querySelectorAll(".page").forEach(el => el.classList.remove("active"));
+      document.getElementById("page-person-detail").classList.add("active");
+      document.querySelectorAll("[data-nav]").forEach(btn => btn.classList.remove("active"));
+      document.getElementById("page-person-detail").innerHTML = `
+        <div class="detail-cover">
+          <div class="back-row">
+            <button type="button" onclick="switchPage('people')">‹</button>
+          </div>
+          <div class="detail-title">
+            <h1>${p.name}</h1>
+          </div>
+        </div>
+        <section class="detail-section">
+          <h3>入场信息</h3>
+          <div class="kv">
+            <div><span>工种/岗位</span><strong>${p.trade}</strong></div>
+            <div><span>所属项目</span><strong>${p.project}</strong></div>
+            <div><span>分包单位</span><strong>${p.company}</strong></div>
+            <div><span>入场登记时间</span><strong>${p.entryDate}</strong></div>
+          </div>
+        </section>
+        <section class="detail-section">
+          <h3>基础信息</h3>
+          <div class="kv">
+            <div><span>手机号</span><strong>${p.phone}</strong></div>
+            <div><span>身份证号</span><strong>${maskIdNo(p.idNo)}</strong></div>
+            <div><span>民族</span><strong>${p.nation}</strong></div>
+            <div><span>性别</span><strong>${p.gender}</strong></div>
+            <div><span>年龄</span><strong>${p.age}岁</strong></div>
+          </div>
+        </section>
+      `;
+      document.getElementById("content").scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => toast.classList.remove("show"), 1800);
+    }
+
+    renderChart();
+    renderPriority();
+    renderPeople();
+    renderEvents();
+  </script>
+</body>
+</html>

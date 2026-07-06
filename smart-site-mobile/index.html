@@ -947,12 +947,12 @@
     ];
 
     let events = [
-      { id: "E20260701001", projectId: "p1", project: "三峡科研基地基坑项目", gate: "南门 1 号闸机", status: "overdue", tag: "", captureCount: 6, rawCount: 38, first: "14:15", last: "14:27", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:27:10", confidence: "91%", pushed: true, note: "", variant: "warn", photos: ["assets/capture-01.png", "assets/capture-02.png", "assets/capture-03.png", "assets/capture-04.png", "assets/capture-05.png", "assets/capture-06.png"], photoTimes: ["14:27:10", "14:21:14", "14:20:17", "14:15:17", "14:16:43", "14:16:55"], material: [] },
-      { id: "E20260701002", projectId: "p2", project: "施工项目A", gate: "生活区入口", status: "overdue", tag: "", captureCount: 6, rawCount: 24, first: "14:15", last: "14:27", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:21:14", confidence: "88%", pushed: true, note: "", variant: "alt", photos: ["assets/capture-02.png", "assets/capture-04.png", "assets/capture-06.png"], photoTimes: ["14:21:14", "14:15:17", "14:16:55"], material: [] },
-      { id: "E20260701003", projectId: "p1", project: "三峡科研基地基坑项目", gate: "材料门", status: "pending", tag: "", captureCount: 6, rawCount: 17, first: "14:20", last: "14:27", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:20:17", confidence: "94%", pushed: false, note: "", variant: "", photos: ["assets/capture-03.png", "assets/capture-01.png"], photoTimes: ["14:20:17", "14:27:10"], material: [] },
-      { id: "E20260701004", projectId: "p3", project: "施工项目B", gate: "2 号门", status: "pending", tag: "", captureCount: 4, rawCount: 11, first: "14:15", last: "14:16", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:16:55", confidence: "86%", pushed: false, note: "", variant: "alt", photos: ["assets/capture-06.png", "assets/capture-05.png"], photoTimes: ["14:16:55", "14:16:43"], material: [] },
-      { id: "E20260701005", projectId: "p1", project: "三峡科研基地基坑项目", gate: "东门", status: "done", tag: "监理入场", captureCount: 5, rawCount: 16, first: "14:16", last: "14:27", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:16:43", confidence: "93%", pushed: false, note: "监理王工临时入场检查，已由项目安全员核实。", variant: "", photos: ["assets/capture-05.png", "assets/capture-01.png"], photoTimes: ["14:16:43", "14:27:10"], processedBy: "刘敏", processedAt: "2026-07-01 14:38:20", material: [] },
-      { id: "E20260701006", projectId: "p2", project: "施工项目A", gate: "主入口", status: "done", tag: "未登记劳务人员", captureCount: 8, rawCount: 20, first: "14:15", last: "14:21", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:15:17", confidence: "90%", pushed: false, note: "已补录花名册并完成入场安全告知。", variant: "warn", photos: ["assets/capture-04.png", "assets/capture-02.png"], photoTimes: ["14:15:17", "14:21:14"], processedBy: "周磊", processedAt: "2026-07-01 14:45:12", material: ["安全教育签到表.jpg", "入场告知书.pdf"] }
+      { id: "E20260701001", projectId: "p1", project: "三峡科研基地基坑项目", gate: "南门 1 号闸机", status: "overdue", tag: "", captureCount: 6, rawCount: 38, first: "14:15", last: "14:27", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:27:10", confidence: "91%", pushed: true, owners: ["吴宏志", "刘敏"], note: "", variant: "warn", photos: ["assets/capture-01.png", "assets/capture-02.png", "assets/capture-03.png", "assets/capture-04.png", "assets/capture-05.png", "assets/capture-06.png"], photoTimes: ["14:27:10", "14:21:14", "14:20:17", "14:15:17", "14:16:43", "14:16:55"], material: [] },
+      { id: "E20260701002", projectId: "p2", project: "施工项目A", gate: "生活区入口", status: "overdue", tag: "", captureCount: 6, rawCount: 24, first: "14:15", last: "14:27", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:21:14", confidence: "88%", pushed: true, owners: ["陈伟", "周磊"], note: "", variant: "alt", photos: ["assets/capture-02.png", "assets/capture-04.png", "assets/capture-06.png"], photoTimes: ["14:21:14", "14:15:17", "14:16:55"], material: [] },
+      { id: "E20260701003", projectId: "p1", project: "三峡科研基地基坑项目", gate: "材料门", status: "pending", tag: "", captureCount: 6, rawCount: 17, first: "14:20", last: "14:27", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:20:17", confidence: "94%", pushed: false, owners: ["吴宏志", "刘敏"], note: "", variant: "", photos: ["assets/capture-03.png", "assets/capture-01.png"], photoTimes: ["14:20:17", "14:27:10"], material: [] },
+      { id: "E20260701004", projectId: "p3", project: "施工项目B", gate: "2 号门", status: "pending", tag: "", captureCount: 4, rawCount: 11, first: "14:15", last: "14:16", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:16:55", confidence: "86%", pushed: false, owners: ["王强"], note: "", variant: "alt", photos: ["assets/capture-06.png", "assets/capture-05.png"], photoTimes: ["14:16:55", "14:16:43"], material: [] },
+      { id: "E20260701005", projectId: "p1", project: "三峡科研基地基坑项目", gate: "东门", status: "done", tag: "业主监理检查", captureCount: 5, rawCount: 16, first: "14:16", last: "14:27", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:16:43", confidence: "93%", pushed: false, owners: ["吴宏志", "刘敏"], note: "监理王工临时入场检查，已由项目安全员核实。", variant: "", photos: ["assets/capture-05.png", "assets/capture-01.png"], photoTimes: ["14:16:43", "14:27:10"], processedBy: "刘敏", processedAt: "2026-07-01 14:38:20", material: [] },
+      { id: "E20260701006", projectId: "p2", project: "施工项目A", gate: "主入口", status: "done", tag: "未登记劳务人员", captureCount: 8, rawCount: 20, first: "14:15", last: "14:21", captureDate: "2026-07-01", uploadTime: "2026-07-01 14:15:17", confidence: "90%", pushed: false, owners: ["陈伟", "周磊"], note: "已核实办理临时入场手续，并补充签到表与安全教育记录。", variant: "warn", photos: ["assets/capture-04.png", "assets/capture-02.png"], photoTimes: ["14:15:17", "14:21:14"], processedBy: "周磊", processedAt: "2026-07-01 14:45:12", material: ["签到表照片.jpg", "安全教育记录.jpg"] }
     ];
 
     const people = [
@@ -981,9 +981,9 @@
       done: ["已处理", "done"]
     };
     const tagOptions = [
-      { name: "业主检查" },
-      { name: "监理入场" },
       { name: "未登记劳务人员" },
+      { name: "业主监理检查" },
+      { name: "办理人员" },
       { name: "设备误报或其他" }
     ];
 
@@ -1246,20 +1246,21 @@
     function openEvent(id) {
       selectedEventId = id;
       const event = events.find(e => e.id === id);
-      const isLocked = event.status === "done";
+      const canOperate = currentOrg !== "company" && event.status !== "done";
       currentPage = "event-detail";
       updatePageTitle("event-detail");
       document.querySelectorAll(".page").forEach(el => el.classList.remove("active"));
       document.getElementById("page-event-detail").classList.add("active");
       document.querySelectorAll("[data-nav]").forEach(btn => btn.classList.remove("active"));
-      renderEventDetail(event, isLocked);
+      renderEventDetail(event, canOperate);
       document.getElementById("content").scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    function renderEventDetail(event, isLocked) {
+    function renderEventDetail(event, canOperate) {
       const selectedTag = event.tag || "";
       const photos = event.photos || [];
       const shownCount = expandedCaptures[event.id] ? photos.length : Math.min(9, photos.length);
+      const owners = event.owners?.length ? event.owners.join("、") : "待配置";
       document.getElementById("page-event-detail").innerHTML = `
         <div class="detail-cover">
           <div class="back-row">
@@ -1273,6 +1274,7 @@
             <div><span>发生地点</span><strong>${event.gate}</strong></div>
             <div><span>事件上传时间</span><strong>${event.uploadTime}</strong></div>
             <div><span>所属项目</span><strong>${event.project}</strong></div>
+            <div><span>项目负责人</span><strong>${owners}</strong></div>
             <div><span>事件状态</span><strong>${eventLabels[event.status][0]}</strong></div>
           </div>
         </section>
@@ -1298,7 +1300,7 @@
           <h3>标记原因</h3>
           <div class="tag-grid">
             ${tagOptions.map(tag => `
-              <button class="tag ${selectedTag === tag.name ? "active" : ""}" type="button" ${isLocked ? "disabled" : ""} onclick="selectTag('${tag.name}')">
+              <button class="tag ${selectedTag === tag.name ? "active" : ""}" type="button" ${canOperate ? "" : "disabled"} onclick="selectTag('${tag.name}')">
                 ${tag.name}
               </button>
             `).join("")}
@@ -1306,12 +1308,12 @@
         </section>
 
         <section class="detail-section" id="disposalSection">
-          ${renderDisposal(event)}
+          ${renderDisposal(event, canOperate)}
         </section>
       `;
     }
 
-    function renderDisposal(event) {
+    function renderDisposal(event, canOperate) {
       const needsMaterial = event.tag === "未登记劳务人员";
       if (event.status === "done") {
         return `
@@ -1323,15 +1325,25 @@
           </div>
         `;
       }
+      if (!canOperate) {
+        return `
+          <h3>项目处置</h3>
+          <div class="kv">
+            <div><span>操作权限</span><strong>当前账号仅可查看</strong></div>
+            <div><span>处置规则</span><strong>项目指定角色可标记原因并提交处置</strong></div>
+          </div>
+        `;
+      }
       return `
         <h3>项目处置</h3>
         <textarea id="eventNote" placeholder="填写核实情况，例如来访单位、接待人、是否补录花名册等">${event.note || ""}</textarea>
         <div style="height:10px"></div>
         <div class="upload-box" style="${needsMaterial ? "" : "display:none"}">
           <strong>未登记劳务人员需补充材料</strong>
-          <span>建议上传安全教育签到表、入场告知书、人员补录截图等。</span>
-          <div class="file-row"><span>安全教育签到表.jpg</span><span class="tone-green">已选择</span></div>
-          <button class="secondary-btn" type="button" onclick="showToast('原型中已模拟选择附件')">上传材料</button>
+          <span>支持现场拍照或从手机相册选择，上传签到表和安全教育记录，最多 9 张图片。</span>
+          <div class="file-row"><span>签到表照片.jpg</span><span class="tone-green">已选择</span></div>
+          <div class="file-row"><span>安全教育记录.jpg</span><span class="tone-green">已选择</span></div>
+          <button class="secondary-btn" type="button" onclick="showToast('可选择拍照或从相册上传')">上传照片</button>
         </div>
         <button class="primary-btn" type="button" onclick="submitEvent()">提交处置</button>
       `;
@@ -1339,14 +1351,15 @@
 
     function selectTag(tag) {
       const event = events.find(e => e.id === selectedEventId);
+      if (currentOrg === "company" || event.status === "done") return;
       event.tag = tag;
-      renderEventDetail(event, false);
+      renderEventDetail(event, true);
     }
 
     function toggleCaptures(id) {
       expandedCaptures[id] = !expandedCaptures[id];
       const event = events.find(e => e.id === id);
-      renderEventDetail(event, event.status === "done");
+      renderEventDetail(event, currentOrg !== "company" && event.status !== "done");
     }
 
     function openCapturePreview(id, index) {
@@ -1370,6 +1383,10 @@
 
     function submitEvent() {
       const event = events.find(e => e.id === selectedEventId);
+      if (currentOrg === "company") {
+        showToast("公司级账号仅可查看，不能处置事件");
+        return;
+      }
       if (!event.tag) {
         showToast("请先选择陌生人识别原因");
         return;
@@ -1379,7 +1396,7 @@
       event.processedBy = event.processedBy || "当前项目人员";
       event.processedAt = event.processedAt || formatDateTime(new Date());
       if (event.tag === "未登记劳务人员" && event.material.length === 0) {
-        event.material = ["安全教育签到表.jpg", "入场告知书.pdf"];
+        event.material = ["签到表照片.jpg", "安全教育记录.jpg"];
       }
       showToast("已提交处置并归档");
       renderPriority();

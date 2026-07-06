@@ -1083,7 +1083,7 @@
     function renderPriority() {
       const list = byScope(events)
         .filter(event => event.status === "overdue" || event.status === "pending")
-        .slice(0, 3);
+        .slice(0, 20);
       document.getElementById("priorityList").innerHTML = list.map(renderRecentEventCard).join("");
     }
 
@@ -1274,7 +1274,7 @@
             <div><span>发生地点</span><strong>${event.gate}</strong></div>
             <div><span>事件上传时间</span><strong>${event.uploadTime}</strong></div>
             <div><span>所属项目</span><strong>${event.project}</strong></div>
-            <div><span>项目负责人</span><strong>${owners}</strong></div>
+            <div><span>负责人</span><strong>${owners}</strong></div>
             <div><span>事件状态</span><strong>${eventLabels[event.status][0]}</strong></div>
           </div>
         </section>

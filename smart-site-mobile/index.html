@@ -1121,7 +1121,8 @@
 
     function renderPriority() {
       const list = byScope(events)
-        .filter(event => event.status === "overdue" || event.status === "pending")
+        .slice()
+        .sort((a, b) => b.uploadTime.localeCompare(a.uploadTime))
         .slice(0, 20);
       document.getElementById("priorityList").innerHTML = list.map(renderRecentEventCard).join("");
     }

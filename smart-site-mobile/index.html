@@ -673,6 +673,45 @@
     }
     .kv div:last-child { border-bottom: 0; padding-bottom: 0; }
     .kv strong { color: var(--text); text-align: right; }
+    .kv .material-row {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: start;
+    }
+    .material-value {
+      text-align: left;
+      justify-self: end;
+      width: min(220px, 100%);
+    }
+    .material-thumbs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .material-thumb {
+      min-width: 0;
+      padding: 0;
+      text-align: left;
+    }
+    .material-thumb img {
+      display: block;
+      width: 100%;
+      height: 68px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+    }
+    .material-thumb span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
     .capture-grid {
       display: grid;
@@ -1296,44 +1335,66 @@
           </div>
         </section>
 
+        ${canOperate ? `
+          <section class="detail-section">
+            <h3>标记原因</h3>
+            <div class="tag-grid">
+              ${tagOptions.map(tag => `
+                <button class="tag ${selectedTag === tag.name ? "active" : ""}" type="button" onclick="selectTag('${tag.name}')">
+                  ${tag.name}
+                </button>
+              `).join("")}
+            </div>
+          </section>
+
+          <section class="detail-section" id="disposalSection">
+            ${renderDisposal(event, true)}
+          </section>
+        ` : renderReadonlyResult(event)}
+      `;
+    }
+
+    function renderReadonlyResult(event) {
+      if (event.status !== "done") return "";
+      return `
         <section class="detail-section">
-          <h3>标记原因</h3>
-          <div class="tag-grid">
-            ${tagOptions.map(tag => `
-              <button class="tag ${selectedTag === tag.name ? "active" : ""}" type="button" ${canOperate ? "" : "disabled"} onclick="selectTag('${tag.name}')">
-                ${tag.name}
-              </button>
-            `).join("")}
+          <h3>处置结果</h3>
+          <div class="kv">
+            <div><span>标记原因</span><strong>${event.tag || "未填写"}</strong></div>
+            <div><span>处理说明</span><strong>${event.note || "已核实并归档"}</strong></div>
+            <div><span>处理人</span><strong>${event.processedBy || "-"}</strong></div>
+            <div><span>处理时间</span><strong>${event.processedAt || "-"}</strong></div>
+            <div class="material-row"><span>材料附件</span><strong class="material-value">${renderMaterialThumbs(event)}</strong></div>
           </div>
         </section>
+      `;
+    }
 
-        <section class="detail-section" id="disposalSection">
-          ${renderDisposal(event, canOperate)}
-        </section>
+    function getMaterialPhotos(event) {
+      const fallback = ["assets/capture-04.png", "assets/capture-05.png", "assets/capture-06.png"];
+      return event.material.map((name, index) => ({
+        name,
+        src: event.photos?.[index] || fallback[index % fallback.length]
+      }));
+    }
+
+    function renderMaterialThumbs(event) {
+      const materials = getMaterialPhotos(event);
+      if (!materials.length) return "无需补充";
+      return `
+        <div class="material-thumbs">
+          ${materials.map((item, index) => `
+            <button class="material-thumb" type="button" onclick="openMaterialPreview('${event.id}', ${index})">
+              <img src="${item.src}" alt="${item.name}">
+              <span>${item.name}</span>
+            </button>
+          `).join("")}
+        </div>
       `;
     }
 
     function renderDisposal(event, canOperate) {
       const needsMaterial = event.tag === "未登记劳务人员";
-      if (event.status === "done") {
-        return `
-          <h3>处置结果</h3>
-          <div class="kv">
-            <div><span>标记原因</span><strong>${event.tag}</strong></div>
-            <div><span>处理说明</span><strong>${event.note || "已核实并归档"}</strong></div>
-            <div><span>材料附件</span><strong>${event.material.length ? event.material.join("、") : "无需补充"}</strong></div>
-          </div>
-        `;
-      }
-      if (!canOperate) {
-        return `
-          <h3>项目处置</h3>
-          <div class="kv">
-            <div><span>操作权限</span><strong>当前账号仅可查看</strong></div>
-            <div><span>处置规则</span><strong>项目指定角色可标记原因并提交处置</strong></div>
-          </div>
-        `;
-      }
       return `
         <h3>项目处置</h3>
         <textarea id="eventNote" placeholder="填写核实情况，例如来访单位、接待人、是否补录花名册等">${event.note || ""}</textarea>
@@ -1371,6 +1432,21 @@
         <div class="preview-meta">
           <span>${event.gate}</span>
           <strong>${event.captureDate} ${event.photoTimes?.[index] || addMinutes(event.first, index)}</strong>
+        </div>
+      `;
+      backdrop.classList.add("show");
+    }
+
+    function openMaterialPreview(id, index) {
+      const event = events.find(e => e.id === id);
+      const item = getMaterialPhotos(event)[index];
+      if (!item) return;
+      const backdrop = document.getElementById("previewBackdrop");
+      document.getElementById("previewContent").innerHTML = `
+        <div class="real-capture"><img src="${item.src}" alt="${item.name}"></div>
+        <div class="preview-meta">
+          <span>${item.name}</span>
+          <strong>材料附件</strong>
         </div>
       `;
       backdrop.classList.add("show");

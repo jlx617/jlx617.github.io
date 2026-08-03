@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light" />
+  <title>AI＋建筑产品经理｜15分钟学习台账</title>
+  <style>
+    :root{
+      --ink:#172033;--muted:#687289;--line:#e7eaf0;--paper:#fff;--bg:#f4f7fb;
+      --brand:#3157d5;--brand2:#6c8cff;--soft:#eef3ff;--done:#18794e;--donebg:#eaf8f1;
+      --doing:#a85b00;--doingbg:#fff4df;--shadow:0 12px 36px rgba(31,47,82,.09);
+    }
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.65 system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+    button,input,select,textarea{font:inherit} button{cursor:pointer}
+    .shell{max-width:980px;margin:auto;padding:18px 14px 80px}
+    .hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#18316f 0%,#3157d5 58%,#7896ff 100%);color:#fff;border-radius:24px;padding:26px 22px;box-shadow:var(--shadow)}
+    .hero:after{content:"";position:absolute;right:-65px;top:-75px;width:210px;height:210px;border:42px solid rgba(255,255,255,.10);border-radius:50%}
+    .eyebrow{font-size:12px;letter-spacing:.12em;opacity:.78}.hero h1{font-size:28px;line-height:1.25;margin:7px 0 9px}.hero p{margin:0;max-width:650px;opacity:.9}
+    .next{margin-top:18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}.next-badge{background:#fff;color:#2345b1;padding:8px 12px;border-radius:999px;font-weight:750}.next-text{font-size:14px}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}.stat{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:13px 14px}.stat b{display:block;font-size:22px;line-height:1.2}.stat span{color:var(--muted);font-size:12px}
+    .progress{height:8px;background:#dfe5f3;border-radius:99px;overflow:hidden;margin-top:8px}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--brand),var(--brand2));width:0;transition:.25s}
+    .panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:14px;margin:14px 0;box-shadow:0 4px 18px rgba(31,47,82,.04)}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.toolbar input,.toolbar select{border:1px solid var(--line);border-radius:11px;padding:9px 11px;background:#fff;color:var(--ink)}.toolbar input{flex:1;min-width:180px}
+    .btn{border:0;border-radius:11px;padding:9px 12px;background:var(--soft);color:#2949aa;font-weight:650}.btn.primary{background:var(--brand);color:#fff}.btn.ghost{background:#fff;border:1px solid var(--line);color:var(--ink)}
+    .note{color:var(--muted);font-size:13px;margin:9px 2px 0}.grid{display:grid;gap:12px}
+    .lesson{background:var(--paper);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 4px 18px rgba(31,47,82,.04)}.lesson.current{border-color:#9cb2ff;box-shadow:0 0 0 3px #edf1ff}
+    .lesson-head{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:15px}.day{width:52px;height:52px;border-radius:15px;background:var(--soft);color:#2949aa;display:grid;place-items:center;font-weight:800;line-height:1.1;text-align:center;font-size:13px}.day strong{font-size:19px}
+    .meta h2{font-size:16px;line-height:1.35;margin:0 0 5px}.tags{display:flex;gap:6px;flex-wrap:wrap}.tag{font-size:11px;color:var(--muted);background:#f3f5f8;padding:2px 7px;border-radius:99px}
+    .state{border:0;border-radius:99px;padding:7px 10px;font-size:12px;font-weight:700;background:#f1f3f7;color:#5f687a}.state.doing{background:var(--doingbg);color:var(--doing)}.state.done{background:var(--donebg);color:var(--done)}
+    .lesson-actions{display:flex;gap:8px;padding:0 15px 14px;flex-wrap:wrap}.lesson-actions .btn{padding:7px 10px;font-size:12px}
+    .detail{display:none;border-top:1px solid var(--line);padding:4px 17px 18px}.lesson.open .detail{display:block}.detail h3{font-size:14px;margin:15px 0 4px}.detail p{margin:0;color:#3f485b}.box{background:#f7f9fc;border-left:3px solid #9fb2ee;border-radius:8px;padding:10px 12px;white-space:pre-wrap}.answer{background:#f4fbf7;border-left-color:#63b88d}.feedback{margin-top:14px;padding-top:13px;border-top:1px dashed var(--line)}.feedback textarea{width:100%;min-height:70px;border:1px solid var(--line);border-radius:11px;padding:9px;resize:vertical}.rating{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0}.rating button{border:1px solid var(--line);background:#fff;border-radius:9px;padding:5px 9px}.rating button.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+    dialog{border:0;border-radius:20px;padding:0;max-width:620px;width:calc(100% - 28px);box-shadow:0 24px 80px rgba(18,31,63,.25)}dialog::backdrop{background:rgba(18,28,50,.44)}.modal{padding:20px}.modal h2{margin:0 0 8px;font-size:20px}.modal textarea{width:100%;min-height:210px;border:1px solid var(--line);border-radius:12px;padding:10px}.modal .row{display:flex;gap:8px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap}
+    .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);opacity:0;background:#172033;color:#fff;padding:10px 15px;border-radius:99px;transition:.2s;z-index:9}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .empty{text-align:center;color:var(--muted);padding:34px}.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:20px}
+    @media(max-width:650px){.hero{border-radius:19px;padding:22px 18px}.hero h1{font-size:23px}.stats{grid-template-columns:repeat(2,1fr)}.lesson-head{grid-template-columns:auto 1fr}.state{grid-column:2;justify-self:start}.shell{padding-left:10px;padding-right:10px}.toolbar>*{flex:1}.toolbar input{flex-basis:100%}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="eyebrow">AI ＋ 建筑数字化 / 企业服务产品经理</div>
+      <h1>15分钟学习台账</h1>
+      <p>不按日期追赶，只按实际完成进度前进。每天一题，学完再续；中断一周也不用补课。</p>
+      <div class="next"><span class="next-badge" id="nextBadge">从第1天开始</span><span class="next-text" id="nextText">先把已学过的内容补标为“已完成”</span></div>
+    </section>
+
+    <section class="stats">
+      <div class="stat"><b id="doneCount">0</b><span>已完成</span></div>
+      <div class="stat"><b id="doingCount">0</b><span>学习中</span></div>
+      <div class="stat"><b id="pendingCount">18</b><span>待学习</span></div>
+      <div class="stat"><b id="rate">0%</b><span>总进度</span><div class="progress"><i id="bar"></i></div></div>
+    </section>
+
+    <section class="panel">
+      <div class="toolbar">
+        <input id="search" type="search" placeholder="搜索主题、BIM、AI、汇报……" />
+        <select id="filter" aria-label="筛选状态"><option value="all">全部状态</option><option value="pending">未学习</option><option value="doing">学习中</option><option value="done">已完成</option></select>
+        <button class="btn primary" id="syncBtn">同步／分享进度</button>
+        <button class="btn" id="setupBtn">初始化已学进度</button>
+        <button class="btn ghost" id="addBtn">导入新题</button>
+        <button class="btn ghost" id="backupBtn">备份</button>
+        <label class="btn ghost" style="cursor:pointer">恢复<input id="restoreFile" type="file" accept="application/json" hidden /></label>
+      </div>
+      <p class="note">状态与反馈只保存在当前浏览器。换手机或清理浏览器前请点“备份”；网页不会自动把勾选结果传给ChatGPT。</p>
+    </section>
+
+    <section class="grid" id="list"></section>
+    <p class="footer">第1—11天依据原学习主线整理为可复习版本；第12—18天承接已生成的AI试点与个人贡献训练。</p>
+  </main>
+
+  <dialog id="setupDialog"><div class="modal"><h2>快速初始化</h2><p>如果前面的题已经学过，可一次标记。请输入“已完成到第几天”，后面的题保持未学习。</p><input id="setupDay" type="number" min="0" max="99" value="0" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:11px"><div class="row"><button class="btn ghost" data-close>取消</button><button class="btn primary" id="applySetup">保存</button></div></div></dialog>
+  <dialog id="addDialog"><div class="modal"><h2>导入下一题</h2><p class="note">把ChatGPT生成的完整“第X天”内容粘贴进来。页面会识别六个固定章节并保存。</p><textarea id="lessonPaste" placeholder="第19天\n一、今日主题\n……"></textarea><div class="row"><button class="btn ghost" data-close>取消</button><button class="btn primary" id="importLesson">导入</button></div></div></dialog>
+  <dialog id="pulseDialog"><div class="modal"><h2>三题小反馈</h2><p>不用写复盘，只选一个最接近的状态：</p><div class="rating" id="pulseChoices"><button>难度合适</button><button>有点难</button><button>内容太多</button><button>没时间</button><button>状态不佳</button></div><textarea id="pulseText" placeholder="可选：哪一点最有用，或希望下一题怎样调整？"></textarea><div class="row"><button class="btn ghost" data-close>稍后</button><button class="btn primary" id="savePulse">保存并复制</button></div></div></dialog>
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const seed = [
+      {d:1,t:'建立你的建筑数字化项目清单',c:'产品方法',k:'转向AI产品经理不是推翻过去，而是先把已有项目变成可调用的案例库。项目清单只记名称、用户、问题和你的角色，不做完整复盘。',p:'从某省BIM云平台、智慧工地IoT监管、模架工装系统、企业管理系统中选3个项目，每个只写：服务谁、解决什么问题、我主要做什么。',tpl:'【项目素材清单】\n项目：____\n服务对象：____\n核心问题：____\n我的角色：____',m:'至少写出1个项目的“服务对象＋核心问题”。',a:'示范写法（请按实际情况替换）：某省BIM云平台智慧工地监管系统｜服务政府监管人员与项目管理人员｜解决BIM、IoT和业务数据分散、监管场景不清晰的问题｜我的角色：参与产品规划、业务梳理与推广支撑。\n解析：先建立真实素材入口，后续所有AI练习都能回到熟悉项目。'},
+      {d:2,t:'用4句话讲清一个智慧工地项目',c:'项目表达',k:'B端项目容易越讲越复杂。先固定四句话：服务谁、原来有什么问题、产品改变什么、如何证明。',p:'选昨天的1个项目，用4句话完成“用户—问题—改变—证据”，不写功能清单。',tpl:'服务谁：____\n原来问题：____\n产品改变：____\n证明方式：____',m:'写清“服务谁”和“原来问题”即可。',a:'示范写法（请按实际情况替换）：服务政府监管人员；原来多项目数据分散、风险难统一查看；平台把BIM、进度、安全、质量和人员信息组织进监管场景；是否提升效率需用平台日志、问题闭环记录和用户反馈核实。\n解析：价值表达要从用户工作变化出发，不能把“上线很多功能”当成价值。'},
+      {d:3,t:'用业务语言解释大模型',c:'AI基础',k:'大模型可以理解为：从大量文本规律中学习“接下来怎样表达更可能合适”的系统。它擅长总结、改写、分类和生成草稿，但不是事实数据库，也不保证每次都正确。',p:'向一位不懂AI的项目负责人解释：大模型能帮助智慧工地团队做什么、不能直接做什么，各写一句。',tpl:'适合：大模型可辅助____。\n不适合直接：大模型不能未经核实就____。',m:'写出一个适合点和一个边界。',a:'参考答案：可辅助整理巡检记录、归纳共性问题并生成汇报草稿；不能未经核实直接认定违规、处罚责任单位或替代专业判断。\n解析：说明能力时同时讲边界，体现AI产品经理的风险意识。'},
+      {d:4,t:'掌握提示词的4个要素',c:'AI基础',k:'好的提示词不靠“神奇咒语”，而是把任务交代完整：角色/背景、目标、输入、输出要求。',p:'把“帮我总结这份智慧工地周报”改成包含背景、目标、输入、输出的结构化提示词。',tpl:'背景：____\n目标：____\n输入：____\n输出：____',m:'至少补齐目标和输出格式。',a:'示范：背景：你是智慧工地B端产品分析助手；目标：提炼本周风险、进展和待决策事项；输入：以下周报原文；输出：按“3条结论—证据—责任人/待核实项”整理，不编造缺失数据。\n解析：结构化提示词把模糊愿望改成可检查的任务。'},
+      {d:5,t:'比较普通提问与结构化提示词',c:'AI基础',k:'提示词是否更好，不看字数，而看输出能否稳定用于下一步工作。应比较完整性、准确性、可执行性和是否容易核实。',p:'针对“需求评审纪要总结”，写一个普通提问和一个结构化版本，并指出后者多解决了什么问题。',tpl:'普通提问：____\n结构化提问：____\n改善点：____',m:'完成两个版本并写出1个改善点。',a:'参考：普通提问“总结这份纪要”；结构化版本要求提取已确认决策、待确认问题、责任人、截止时间，并把原文没有的信息标注待补充。改善点是减少遗漏和虚构，输出可直接跟进。\n解析：评估提示词要回到业务可用性。'},
+      {d:6,t:'把过度解释改成三句话回应',c:'沟通表达',k:'临场紧张时容易先辩解背景。更稳的顺序是：先结论、再事实、最后下一步。',p:'把“领导问为什么进度慢”改写成三句话：当前结论、客观原因、下一步动作。',tpl:'结论：目前____。\n事实：主要卡在____。\n下一步：我会在____前____。',m:'只写3句话，不补长背景。',a:'示范写法（请按实际情况替换）：目前原型已完成，评审时间比计划晚。主要卡在监管口径尚未确认，而不是研发执行问题。我会在周三前整理两个取舍方案，请相关负责人确认后更新排期。\n解析：先承担信息责任，再说明可控动作，能减少防御性表达。'},
+      {d:7,t:'第1周复盘：找到最可复用的一项成果',c:'周复盘',k:'复盘不是重做所有题，而是找出一项已经能用于工作或求职的成果，并说明下一步补什么。',p:'从第1—6天选出最有用的一张卡，只回答：它能用在哪里、目前缺什么证据、下一周继续强化什么。',tpl:'本周最有用成果：____\n可用于：____\n证据缺口：____\n下周衔接：____',m:'选出1项成果并写明用途。',a:'示范：最有用成果是某省BIM云平台4句话项目卡；可用于领导汇报与面试开场；缺少真实使用数据和明确个人分工；下周继续训练AI场景与风险判断。\n解析：复盘的价值是决定保留什么、下一步补什么。'},
+      {d:8,t:'识别大模型“幻觉”风险',c:'AI风险',k:'幻觉是模型生成了听起来合理、但没有依据或不真实的内容。在政府监管、施工规范和项目数据场景中，风险不在“写得不好”，而在错误内容被当作事实。',p:'判断“AI自动生成安全检查结论”中最危险的一类幻觉，并写一个产品控制措施。',tpl:'最危险的错误：____\n可能后果：____\n控制措施：____',m:'写出错误与1项控制。',a:'参考：最危险的是引用不存在的规范条款或把疑似问题写成已确认违规；可能导致错误整改或责任认定；产品上要求显示来源、原文位置并由人工确认。\n解析：控制幻觉不能只靠提醒模型，要改变证据展示和审批流程。'},
+      {d:9,t:'理解RAG：让回答基于企业资料',c:'AI基础',k:'RAG可以理解为“先找资料，再让模型依据资料回答”。它不等于模型变得永远正确，但能让答案更接近企业文档，并可展示来源。',p:'为“建筑监管知识助手”确定：用户问什么、系统去哪里找、回答必须带什么证据。',tpl:'用户问题：____\n检索资料：____\n回答证据：____',m:'写清一个问题和一个资料来源。',a:'参考：用户问“某类问题应依据哪条检查要求”；系统检索已审核的制度、标准和企业检查手册；回答必须带文档名称、版本、条款位置和原文片段。\n解析：RAG产品的关键不只是回答，而是资料范围、版本与可追溯性。'},
+      {d:10,t:'区分AI工作流与一次问答',c:'AI产品',k:'一次问答只生成内容；工作流把多个步骤串起来，例如收集输入、检索资料、生成草稿、人工确认、进入业务系统。',p:'把“AI总结巡检记录”扩展成不超过5步的业务工作流，并明确哪一步必须人工确认。',tpl:'1.____\n2.____\n3.____\n4.____\n5.____\n人工确认：第__步',m:'写出3步并标出人工确认点。',a:'参考：上传巡检记录→检索相关制度→生成问题摘要和建议→安全人员核对事实与依据→确认后生成整改任务。人工确认在第4步。\n解析：模型输出进入业务后，必须明确责任和错误兜底。'},
+      {d:11,t:'判断一个需求是否适合AI',c:'产品判断',k:'适合AI的需求通常包含难以用固定规则穷举的内容识别、语言理解或生成，同时允许通过人工复核控制错误。规则清晰、结果必须100%确定的环节往往优先用普通系统。',p:'判断“未戴安全帽视频识别”为什么适合AI、为什么不能只靠AI，各写一句。',tpl:'适合AI，因为：____\n不能只靠AI，因为：____\n产品边界：____',m:'写出适用原因和边界。',a:'参考：画面受角度、光线和遮挡影响，难以用固定规则穷举，适合AI筛选；但误报漏报会影响安全管理，不能直接认定违规；AI提供疑似线索，由人工确认。\n解析：场景判断同时包含能力匹配与错误代价。'},
+      {d:12,t:'把AI试点目标写成可验证假设',c:'AI试点',k:'可验证假设要说明谁使用、工作方式怎样改变、用什么证据判断，以及什么结果说明不成立。试点不是证明方案一定正确，而是低成本决定是否继续。',p:'针对未戴安全帽AI识别，写清核心用户、原流程、AI介入环节、核心指标和失败表现，最后合并成一句假设。',tpl:'核心用户：____\n原流程：____\nAI介入：____\n核心指标：____\n失败表现：____\n完整假设：在____范围内，如果AI____，那么____；同时____，否则暂停。',m:'完成“AI介入—核心指标—失败表现”。',a:'参考：项目安全人员原靠巡查或抽查视频；AI先筛选疑似事件；指标为有效问题确认时间；若时间无改善或复核量超出承载则假设不成立。\n解析：价值与风险边界同时写入，试点才可能被否定。'},
+      {d:13,t:'为AI试点补上原流程基线',c:'AI试点',k:'基线是AI介入前的真实工作状态。要说清测量谁、哪个环节、起止动作和数据来源，才能比较AI是否带来改变。',p:'为“有效问题确认时间”确定测量对象、计时起点、终点、介入前数据源和介入后数据源，不填虚构数据。',tpl:'测量对象：____\n起点：____\n终点：____\n介入前数据：____\n介入后数据：____\n待核实：____',m:'写清起点、终点和前后数据来源。',a:'示范：对象为项目安全人员；起点需在巡查记录、视频范围或事件发生时间中选择可追溯的一种；终点为人工标记有效问题；前数据来自巡查台账，后数据来自告警与复核日志。真实记录能力需核实。\n解析：没有可记录起点，就不能假装拥有精确基线。'},
+      {d:14,t:'第2周复盘：AI试点决策链',c:'周复盘',k:'把零散判断连接为“错误代价—处理策略—人机边界—试点假设—基线—继续或暂停”，才能形成作品集中的决策主线。',p:'每项一句：优先控制哪类错误、告警怎样分级、AI不能突破什么边界、验证什么假设、用什么基线、何时暂停。',tpl:'错误取舍：____\n分级策略：____\n人机边界：____\n核心假设：____\n基线：____\n暂停条件：____',m:'完成取舍、边界、假设、暂停条件四项。',a:'参考：优先发现高风险线索并控制复核量；高置信优先、中置信集中、低置信抽查；AI只给疑似线索；比较确认时间；误报超承载、效率无改善或漏报风险不可接受时暂停。\n解析：这是一条可迁移到质量识别和设备异常的产品判断链。'},
+      {d:15,t:'把岗位动作改写成个人贡献',c:'产品表达',k:'“调研、原型、评审”是岗位动作。贡献表达要包含关键问题、我的判断、推动变化和事实证据。',p:'把“我负责AI安全帽识别的需求调研、原型设计和项目推进”改为不超过100字的贡献表达。',tpl:'案例性质：____\n关键问题：____\n我的判断：____\n推动变化：____\n可用证据：____\n贡献边界：____',m:'写出问题、判断、变化三句话。',a:'示范（请按实际情况替换）：面对真实工地误报、漏报和复核压力尚未验证的问题，我建议不直接全面推广，并推动补充小范围试点、人工复核边界与价值指标。证据可由方案、原型和评审记录核实；模型调优属于团队成果。\n解析：重点体现取舍，不占用算法与团队成绩。'},
+      {d:16,t:'给个人贡献补上证据链',c:'产品方法',k:'证据可分为过程、交付和结果：调研/会议证明参与判断，方案/原型证明形成成果，版本/数据/反馈证明产生影响。三类不必齐全，但必须诚实区分。',p:'从某省BIM云平台智慧工地监管系统选一项你重点推动的变化，分别找过程证据、交付证据、结果证据，并标出不能归为个人的成果。',tpl:'推动变化：____\n过程证据：____\n交付证据：____\n结果证据：____\n仍缺证据：____\n团队成果边界：____',m:'写出变化、一项真实证据和当前可确认表达。',a:'示范（请按实际情况替换）：推动/参与梳理五类BIM监管场景；过程证据为讨论纪要和修改意见；交付证据为需求、原型、手册或汇报材料；结果证据需核实上线、推广、日志和反馈。平台整体建设、研发、BIM处理和推广成绩不能全归个人。\n解析：先用掌握的证据，再决定用“参与、负责还是推动”。'},
+      {d:17,t:'用30秒回答“你具体做了什么”',c:'沟通表达',k:'临场表达只保留四句：问题、判断、推动变化、证据。不要从大背景讲起，也不要罗列所有工作动作。',p:'继续使用某省BIM云平台案例，写一段不超过120字的回答，包含关键问题、判断、变化、证据和待核实结果。',tpl:'关键问题：____\n我的判断：____\n推动变化：____\n已有证据：____\n待核实：____\n完整回答：____',m:'写出问题、判断、推动变化三句。',a:'示范（请按实际情况替换）：在某省BIM云平台智慧工地监管系统中，我发现已有数据与政府监管场景结合不够清晰，因此围绕风险发现和闭环处置参与梳理五类BIM监管场景，并形成方案及推广材料。交付可由文档证明，使用价值仍需结合日志核实。\n解析：先说关键增量，再主动区分交付和成效。'},
+      {d:18,t:'校准“参与、负责、推动、主导”',c:'表达边界',k:'动词越强，证据要求越高。“推动”意味着你的行动让方案或相关方发生变化；“主导”还要求关键方向和决策主要由你组织。证据不足时先用稳妥版本。',p:'只检查一句“我推动梳理了五类BIM监管场景”：判断动词是否准确、真实动作是什么、材料是什么、证据不足改用什么词、最需核实什么。',tpl:'关键动词：____\n是否准确：____\n真实动作：____\n支持材料：____\n最需核实：____\n当前稳妥版本：____',m:'判断“推动”是否准确，并写出一个真实动作；不确定可标待核实。',a:'示范（请按实际情况替换）：当前先判断“不确定”；真实动作可能是整理监管功能、修改方案和汇报材料；证据是历史版本、意见和纪要；需核实五类场景由谁提出、整合和确认。证据不足时写“参与并重点支撑梳理与表达优化”。\n解析：真实性校准能避免面试追问时被迫过度解释。'}
+    ];
+
+    const STORE='aiBuildingPmTracker.v1';
+    let data=load(); let pulseChoice='';
+    function load(){try{const x=JSON.parse(localStorage.getItem(STORE));if(x&&Array.isArray(x.lessons))return x}catch(e){}return{lessons:seed,status:{},feedback:{},pulses:[],lastPulseAt:0}}
+    function save(){localStorage.setItem(STORE,JSON.stringify(data))}
+    function esc(s=''){return String(s).replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+    function state(d){return data.status[d]||'pending'}
+    function setState(d,s){const before=state(d);data.status[d]=s;save();render();if(s==='done'&&before!=='done')maybePulse()}
+    function nextLesson(){return data.lessons.slice().sort((a,b)=>a.d-b.d).find(x=>state(x.d)!=='done')}
+    function render(){
+      const q=document.querySelector('#search').value.trim().toLowerCase(), f=document.querySelector('#filter').value;
+      const lessons=data.lessons.slice().sort((a,b)=>a.d-b.d);const counts={done:0,doing:0,pending:0};lessons.forEach(x=>counts[state(x.d)]++);
+      doneCount.textContent=counts.done;doingCount.textContent=counts.doing;pendingCount.textContent=counts.pending;const pct=lessons.length?Math.round(counts.done/lessons.length*100):0;rate.textContent=pct+'%';bar.style.width=pct+'%';
+      const next=nextLesson();nextBadge.textContent=next?'建议继续：第'+next.d+'天':'当前题目已全部完成';nextText.textContent=next?next.t:'可导入下一题，或复制进度让我继续规划';
+      const rows=lessons.filter(x=>(f==='all'||state(x.d)===f)&&(!q||(x.t+' '+x.c+' '+x.k+' '+x.p).toLowerCase().includes(q)));
+      list.innerHTML=rows.length?rows.map(x=>card(x,next&&next.d===x.d)).join(''):'<div class="empty">没有符合条件的题目</div>';
+    }
+    function card(x,current){const s=state(x.d),fb=data.feedback[x.d]||{};return `<article class="lesson ${current?'current':''}" data-day="${x.d}">
+      <div class="lesson-head"><div class="day">第<strong>${x.d}</strong>天</div><div class="meta"><h2>${esc(x.t)}</h2><div class="tags"><span class="tag">15分钟</span><span class="tag">${esc(x.c)}</span>${current?'<span class="tag">建议下一题</span>':''}</div></div><button class="state ${s}" data-cycle="${x.d}">${s==='done'?'✓ 已完成':s==='doing'?'学习中':'未学习'}</button></div>
+      <div class="lesson-actions"><button class="btn" data-open="${x.d}">查看题目</button><button class="btn ghost" data-set="doing" data-d="${x.d}">标记学习中</button><button class="btn ghost" data-set="done" data-d="${x.d}">标记已完成</button></div>
+      <div class="detail"><h3>一、今日主题</h3><p>${esc(x.t)}</p><h3>二、3分钟知识点</h3><p>${esc(x.k)}</p><h3>三、8分钟实践任务</h3><p>${esc(x.p)}</p><h3>四、4分钟输出模板</h3><div class="box">${esc(x.tpl)}</div><h3>五、最低完成标准</h3><p>${esc(x.m)}</p><h3>六、参考答案与解析</h3><p><b>请先独立完成，再向下对照。</b></p><div class="box answer">${esc(x.a)}</div>
+      <div class="feedback"><h3>我的学习反馈（可选）</h3><div class="rating" data-rate="${x.d}">${[1,2,3,4,5].map(n=>`<button class="${fb.score===n?'on':''}" data-score="${n}" data-d="${x.d}">${n}${n===1?' 难':n===5?' 合适':''}</button>`).join('')}</div><textarea data-note="${x.d}" placeholder="哪一点有用？哪里太难或不适合？">${esc(fb.note||'')}</textarea><button class="btn" data-save-note="${x.d}">保存反馈</button></div></div></article>`}
+    document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.open){document.querySelector(`[data-day="${b.dataset.open}"]`).classList.toggle('open');b.textContent=b.textContent==='收起'?'查看题目':'收起'}if(b.dataset.set)setState(+b.dataset.d,b.dataset.set);if(b.dataset.cycle){const d=+b.dataset.cycle,s=state(d);setState(d,s==='pending'?'doing':s==='doing'?'done':'pending')}if(b.dataset.score){const d=+b.dataset.d;data.feedback[d]=data.feedback[d]||{};data.feedback[d].score=+b.dataset.score;save();render();document.querySelector(`[data-day="${d}"]`).classList.add('open')}if(b.dataset.saveNote){const d=+b.dataset.saveNote;data.feedback[d]=data.feedback[d]||{};data.feedback[d].note=document.querySelector(`[data-note="${d}"]`).value.trim();save();toast('反馈已保存')}if(b.dataset.close)b.closest('dialog').close()});
+    search.addEventListener('input',render);filter.addEventListener('change',render);
+    setupBtn.onclick=()=>setupDialog.showModal();addBtn.onclick=()=>addDialog.showModal();
+    applySetup.onclick=()=>{const n=Math.max(0,+setupDay.value||0);data.lessons.forEach(x=>data.status[x.d]=x.d<=n?'done':'pending');save();setupDialog.close();render();toast('已初始化到第'+n+'天')};
+    function syncText(){const done=data.lessons.filter(x=>state(x.d)==='done').map(x=>x.d),doing=data.lessons.filter(x=>state(x.d)==='doing').map(x=>x.d),next=nextLesson();const recent=Object.entries(data.feedback).filter(([,v])=>v.note||v.score).slice(-3).map(([d,v])=>`第${d}天：难度${v.score||'未评'}；${v.note||'无文字反馈'}`).join('｜');const pulse=data.pulses.at(-1);return `【学习进度同步】\n已完成：${done.length?'第'+done.join('、')+'天':'暂无'}\n学习中：${doing.length?'第'+doing.join('、')+'天':'暂无'}\n建议下一题：${next?'第'+next.d+'天《'+next.t+'》':'请生成下一题'}\n最近反馈：${recent||'暂无'}\n阶段状态：${pulse?pulse.choice+(pulse.text?'；'+pulse.text:''):'暂无'}\n请按以上真实进度调整后续任务；未完成当前题时不要生成新题。`}
+    async function copyText(t){
+      if(navigator.share){try{await navigator.share({title:'AI产品经理学习进度',text:t});toast('进度已分享');return}catch(e){if(e&&e.name==='AbortError')return}}
+      try{await navigator.clipboard.writeText(t);toast('已复制，可直接粘贴给ChatGPT')}catch(e){prompt('请复制下面内容：',t)}
+    }syncBtn.onclick=()=>copyText(syncText());
+    function maybePulse(){const n=data.lessons.filter(x=>state(x.d)==='done').length;if(n>=3&&n-data.lastPulseAt>=3){pulseChoice='';pulseText.value='';document.querySelectorAll('#pulseChoices button').forEach(x=>x.classList.remove('on'));setTimeout(()=>pulseDialog.showModal(),150)}}
+    pulseChoices.onclick=e=>{if(e.target.tagName!=='BUTTON')return;pulseChoice=e.target.textContent;[...pulseChoices.children].forEach(x=>x.classList.toggle('on',x===e.target))};
+    savePulse.onclick=()=>{const n=data.lessons.filter(x=>state(x.d)==='done').length;data.pulses.push({at:new Date().toISOString(),choice:pulseChoice||'未选择',text:pulseText.value.trim()});data.lastPulseAt=n;save();pulseDialog.close();copyText(syncText())};
+    importLesson.onclick=()=>{const raw=lessonPaste.value.trim(),m=raw.match(/第\s*(\d+)\s*天/);if(!m)return toast('没有识别到“第X天”');const d=+m[1];const get=(a,b)=>{const r=new RegExp(a+'[\\s\\S]*?(?:\\n|：)([\\s\\S]*?)(?='+b+'|$)').exec(raw);return r?r[1].trim():''};const item={d,t:get('一、今日主题','二、3分钟知识点').split('\n')[0]||'新学习任务',c:'新导入',k:get('二、3分钟知识点','三、8分钟实践任务'),p:get('三、8分钟实践任务','四、4分钟输出模板'),tpl:get('四、4分钟输出模板','五、最低完成标准'),m:get('五、最低完成标准','六、参考答案与解析'),a:get('六、参考答案与解析','$').replace(/^请先独立完成，再向下对照。?/,'').trim()};const i=data.lessons.findIndex(x=>x.d===d);if(i>=0)data.lessons[i]=item;else data.lessons.push(item);save();addDialog.close();lessonPaste.value='';render();toast('第'+d+'天已导入')};
+    backupBtn.onclick=()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='AI建筑产品经理学习进度-'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href)};
+    restoreFile.onchange=async()=>{try{const x=JSON.parse(await restoreFile.files[0].text());if(!Array.isArray(x.lessons))throw 0;data=x;save();render();toast('学习进度已恢复')}catch(e){toast('备份文件无效')}};
+    function toast(s){const t=document.querySelector('#toast');t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+    render();
+  </script>
+</body>
+</html>

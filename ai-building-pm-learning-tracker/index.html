@@ -98,7 +98,8 @@
 
     const STORE='aiBuildingPmTracker.v1';
     let data=load(); let pulseChoice='';
-    function load(){try{const x=JSON.parse(localStorage.getItem(STORE));if(x&&Array.isArray(x.lessons))return x}catch(e){}return{lessons:seed,status:{},feedback:{},pulses:[],lastPulseAt:0}}
+    function load(){try{const x=JSON.parse(localStorage.getItem(STORE));if(x&&Array.isArray(x.lessons)){const byDay=new Map(x.lessons.map(v=>[v.d,v]));seed.forEach(v=>{if(!byDay.has(v.d))byDay.set(v.d,v)});x.lessons=[...byDay.values()].sort((a,b)=>a.d-b.d);return x}}catch(e){}return{lessons:seed,status:{},feedback:{},pulses:[],lastPulseAt:0}}
+    async function syncRemoteLessons(){try{const r=await fetch('./lessons.json',{cache:'no-store'});if(!r.ok)return;const remote=await r.json();if(!remote||!Array.isArray(remote.lessons))return;const byDay=new Map(data.lessons.map(v=>[v.d,v]));remote.lessons.forEach(v=>byDay.set(v.d,{...(byDay.get(v.d)||{}),...v}));data.lessons=[...byDay.values()].sort((a,b)=>a.d-b.d);save();render()}catch(e){}}
     function save(){localStorage.setItem(STORE,JSON.stringify(data))}
     function esc(s=''){return String(s).replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
     function state(d){return data.status[d]||'pending'}
@@ -133,7 +134,7 @@
     backupBtn.onclick=()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='AI建筑产品经理学习进度-'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href)};
     restoreFile.onchange=async()=>{try{const x=JSON.parse(await restoreFile.files[0].text());if(!Array.isArray(x.lessons))throw 0;data=x;save();render();toast('学习进度已恢复')}catch(e){toast('备份文件无效')}};
     function toast(s){const t=document.querySelector('#toast');t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
-    render();
+    render();syncRemoteLessons();
   </script>
 </body>
 </html>
